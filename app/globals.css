@@ -22,4 +22,4 @@ button { cursor: pointer; }
 .soft-grid { background-image: linear-gradient(rgba(47,112,93,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(47,112,93,.035) 1px,transparent 1px); background-size: 32px 32px; }
 .page-enter { animation: rise .35s ease both; }
 @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; transition-duration:.01ms!important; } }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }

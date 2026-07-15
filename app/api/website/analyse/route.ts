@@ -1,16 +1,13 @@
 import { NextResponse } from "next/server";
-import { lookup } from "node:dns/promises";
-import { isIP } from "node:net";
 import { normaliseWebsiteUrl } from "@/lib/utils";
+import { validatePublicDestination } from "@/lib/services/website-security";
 
 export const runtime="nodejs";
 const MAX_BYTES=1_000_000;
-function privateIp(ip:string){if(ip.includes(":"))return ip==="::1"||ip.startsWith("fc")||ip.startsWith("fd")||ip.startsWith("fe80:");const p=ip.split(".").map(Number);return p[0]===10||p[0]===127||p[0]===0||p[0]===169&&p[1]===254||p[0]===192&&p[1]===168||p[0]===172&&p[1]>=16&&p[1]<=31;}
-async function validate(target:string){const parsed=new URL(target);if(parsed.protocol!=="https:"&&parsed.protocol!=="http:")throw new Error("Only public HTTP websites can be analysed.");if(isIP(parsed.hostname)&&privateIp(parsed.hostname))throw new Error("Private network addresses are not allowed.");const addresses=await lookup(parsed.hostname,{all:true});if(!addresses.length||addresses.some(a=>privateIp(a.address)))throw new Error("This address cannot be analysed safely.");}
 async function safeFetch(initial:string,method:"GET"|"HEAD"="GET"){
   let target=initial;
   for(let redirects=0;redirects<=3;redirects++){
-    await validate(target);
+    await validatePublicDestination(target);
     const response=await fetch(target,{method,redirect:"manual",signal:AbortSignal.timeout(7000),headers:{"User-Agent":"NorthstarMetadataBot/1.0 (+lightweight onboarding analysis)",Accept:"text/html,application/xhtml+xml"}});
     if([301,302,303,307,308].includes(response.status)){const location=response.headers.get("location");if(!location)throw new Error("Website returned an invalid redirect.");target=new URL(location,target).toString();continue;}
     return response;

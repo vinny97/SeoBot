@@ -1,9 +1,136 @@
 import Link from "next/link";
-import { ArrowRight, Check, Compass, ShieldCheck, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  Compass,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
 import { productConfig } from "@/lib/config/product";
 
-export default function Landing(){return <main className="min-h-screen overflow-hidden">
-  <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-6"><Link href="/" className="flex items-center gap-2 font-bold tracking-tight"><span className="grid h-9 w-9 place-items-center rounded-xl bg-[var(--accent)] text-white"><Compass size={19}/></span>{productConfig.name}</Link><div className="flex items-center gap-2"><Link href="/login" className="rounded-xl px-4 py-2.5 text-sm font-semibold hover:bg-black/5">Log in</Link><Link href="/signup" className="rounded-xl bg-[var(--ink)] px-4 py-2.5 text-sm font-semibold text-white">Get started</Link></div></nav>
-  <section className="soft-grid border-y border-[var(--line)]"><div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 lg:grid-cols-[1fr_.9fr] lg:items-center lg:py-28"><div><div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-sm"><Sparkles size={15} className="text-[var(--accent)]"/> Calm, continuous SEO work</div><h1 className="max-w-3xl text-5xl font-semibold leading-[1.03] tracking-[-.055em] sm:text-6xl">Organic growth, handled like you hired someone.</h1><p className="mt-6 max-w-xl text-lg leading-8 text-[var(--muted)]">{productConfig.name} learns your business, finds useful work, explains why it matters and keeps your organic visibility moving forward.</p><div className="mt-8 flex flex-wrap gap-3"><Link href="/signup" className="inline-flex items-center gap-2 rounded-xl bg-[var(--accent)] px-5 py-3.5 font-semibold text-white shadow-sm">Build my first plan <ArrowRight size={18}/></Link><Link href="/login" className="rounded-xl border border-[var(--line)] bg-white px-5 py-3.5 font-semibold">I already have an account</Link></div><div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[var(--muted)]">{["No SEO expertise needed","You approve important changes","Clear about what is demo data"].map(x=><span key={x} className="flex items-center gap-1.5"><Check size={15} className="text-[var(--accent)]"/>{x}</span>)}</div></div>
-  <div className="relative"><div className="absolute -inset-12 rounded-full bg-[#dfece5] blur-3xl"/><div className="relative rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-5 shadow-[0_25px_80px_rgba(30,41,37,.12)]"><div className="flex items-center justify-between border-b border-[var(--line)] pb-4"><div><p className="text-xs font-bold uppercase tracking-wider text-[var(--accent)]">Working now</p><h2 className="mt-1 font-semibold">Reviewing your website structure</h2></div><span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[var(--accent)]"/></div><div className="py-6"><div className="h-2 rounded-full bg-[#e8e8e2]"><div className="h-2 w-2/3 rounded-full bg-[var(--accent)]"/></div><p className="mt-3 text-sm text-[var(--muted)]">Understanding the pages and signals already available.</p></div><div className="space-y-3">{[["Opportunity found","Clarify your main service on the homepage"],["Completed","Business profile confirmed"],["Up next","Prepare initial content plan"]].map(([a,b],i)=><div key={a} className="flex gap-3 rounded-xl bg-[#f3f2ed] p-3"><span className="mt-1 h-2 w-2 rounded-full bg-[var(--accent)]"/><div><p className="text-xs font-semibold text-[var(--muted)]">{a}</p><p className="mt-0.5 text-sm font-medium">{b}</p></div></div>)}</div><div className="mt-5 flex items-center gap-2 rounded-xl border border-[var(--line)] p-3 text-sm text-[var(--muted)]"><ShieldCheck size={18} className="text-[var(--accent)]"/> Nothing needs your approval right now.</div></div></div></div></section>
-</main>}
+export default function Landing() {
+  return (
+    <main className="min-h-screen overflow-hidden">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-6">
+        <Link
+          href="/"
+          className="flex items-center gap-2 font-bold tracking-tight"
+        >
+          <span className="grid h-9 w-9 place-items-center rounded-xl bg-[var(--accent)] text-white">
+            <Compass size={19} />
+          </span>
+          {productConfig.name}
+        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/login"
+            className="rounded-xl px-4 py-2.5 text-sm font-semibold hover:bg-black/5"
+          >
+            Log in
+          </Link>
+          <Link
+            href="/signup"
+            className="rounded-xl bg-[var(--ink)] px-4 py-2.5 text-sm font-semibold text-white"
+          >
+            Get started
+          </Link>
+        </div>
+      </nav>
+      <section className="soft-grid border-y border-[var(--line)]">
+        <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 lg:grid-cols-[1fr_.9fr] lg:items-center lg:py-28">
+          <div>
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-sm">
+              <Sparkles size={15} className="text-[var(--accent)]" /> Calm,
+              continuous SEO work
+            </div>
+            <h1 className="max-w-3xl text-5xl font-semibold leading-[1.03] tracking-[-.055em] sm:text-6xl">
+              Organic growth, handled like you hired someone.
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-[var(--muted)]">
+              {productConfig.name} learns your business, finds useful work,
+              explains why it matters and keeps your organic visibility moving
+              forward.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href="/signup"
+                className="inline-flex items-center gap-2 rounded-xl bg-[var(--accent)] px-5 py-3.5 font-semibold text-white shadow-sm"
+              >
+                Build my first plan <ArrowRight size={18} />
+              </Link>
+              <Link
+                href="/login"
+                className="rounded-xl border border-[var(--line)] bg-white px-5 py-3.5 font-semibold"
+              >
+                I already have an account
+              </Link>
+            </div>
+            <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[var(--muted)]">
+              {[
+                "No SEO expertise needed",
+                "You approve important changes",
+                "Clear about what is demo data",
+              ].map((x) => (
+                <span key={x} className="flex items-center gap-1.5">
+                  <Check size={15} className="text-[var(--accent)]" />
+                  {x}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="relative">
+            <div className="absolute -inset-12 rounded-full bg-[#dfece5] blur-3xl" />
+            <div className="relative rounded-3xl border border-[var(--line)] bg-[var(--surface)] p-5 shadow-[0_25px_80px_rgba(30,41,37,.12)]">
+              <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-[var(--accent)]">
+                    Working now
+                  </p>
+                  <h2 className="mt-1 font-semibold">
+                    Reviewing your website structure
+                  </h2>
+                </div>
+                <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[var(--accent)]" />
+              </div>
+              <div className="py-6">
+                <div className="h-2 rounded-full bg-[#e8e8e2]">
+                  <div className="h-2 w-2/3 rounded-full bg-[var(--accent)]" />
+                </div>
+                <p className="mt-3 text-sm text-[var(--muted)]">
+                  Understanding the pages and signals already available.
+                </p>
+              </div>
+              <div className="space-y-3">
+                {[
+                  [
+                    "Opportunity found",
+                    "Clarify your main service on the homepage",
+                  ],
+                  ["Completed", "Business profile confirmed"],
+                  ["Up next", "Prepare initial content plan"],
+                ].map(([a, b]) => (
+                  <div
+                    key={a}
+                    className="flex gap-3 rounded-xl bg-[#f3f2ed] p-3"
+                  >
+                    <span className="mt-1 h-2 w-2 rounded-full bg-[var(--accent)]" />
+                    <div>
+                      <p className="text-xs font-semibold text-[var(--muted)]">
+                        {a}
+                      </p>
+                      <p className="mt-0.5 text-sm font-medium">{b}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-5 flex items-center gap-2 rounded-xl border border-[var(--line)] p-3 text-sm text-[var(--muted)]">
+                <ShieldCheck size={18} className="text-[var(--accent)]" />{" "}
+                Nothing needs your approval right now.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}

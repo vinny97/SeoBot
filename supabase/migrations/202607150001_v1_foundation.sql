@@ -24,7 +24,7 @@ alter table public.profiles enable row level security; alter table public.worksp
 
 create or replace function public.is_workspace_member(target uuid) returns boolean language sql stable security definer set search_path=public as $$ select exists(select 1 from workspace_members where workspace_id=target and user_id=auth.uid()) $$;
 create policy "profiles own row" on public.profiles for all using (id=auth.uid()) with check (id=auth.uid());
-create policy "members read workspaces" on public.workspaces for select using (public.is_workspace_member(id));
+create policy "members read workspaces" on public.workspaces for select using (created_by=auth.uid() or public.is_workspace_member(id));
 create policy "users create workspaces" on public.workspaces for insert with check (created_by=auth.uid());
 create policy "members read memberships" on public.workspace_members for select using (user_id=auth.uid() or public.is_workspace_member(workspace_id));
 create policy "users create own membership" on public.workspace_members for insert with check (user_id=auth.uid());

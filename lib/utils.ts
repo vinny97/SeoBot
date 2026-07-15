@@ -18,8 +18,8 @@ export function formatRelative(date?: string) {
 export function normaliseWebsiteUrl(input: string) {
   const withProtocol = /^https?:\/\//i.test(input.trim()) ? input.trim() : `https://${input.trim()}`;
   const url = new URL(withProtocol);
-  const hostname = url.hostname.toLowerCase().replace(/^www\./, "");
-  const blocked = hostname === "localhost" || hostname.endsWith(".local") || hostname === "0.0.0.0" || /^127\./.test(hostname) || /^10\./.test(hostname) || /^192\.168\./.test(hostname) || /^172\.(1[6-9]|2\d|3[01])\./.test(hostname);
+  const hostname = url.hostname.toLowerCase().replace(/^www\./, "").replace(/^\[|\]$/g, "");
+  const blocked = hostname === "localhost" || hostname.endsWith(".local") || hostname.includes(":") || hostname === "0.0.0.0" || /^127\./.test(hostname) || /^10\./.test(hostname) || /^192\.168\./.test(hostname) || /^172\.(1[6-9]|2\d|3[01])\./.test(hostname);
   if (blocked || !hostname.includes(".")) throw new Error("Please enter a public website address.");
   url.protocol = "https:";
   url.pathname = url.pathname === "/" ? "" : url.pathname;

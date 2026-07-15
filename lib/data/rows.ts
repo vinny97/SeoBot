@@ -1,0 +1,3 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { databaseError } from "@/lib/data/errors";
+export async function replaceProjectRows(client:SupabaseClient,table:string,projectId:string,rows:Record<string,unknown>[]){const removed=await client.from(table).delete().eq("project_id",projectId);databaseError(`update ${table.replaceAll("_"," ")}`,removed.error);if(!rows.length)return;const clean=rows.map(row=>Object.fromEntries(Object.entries(row).filter(([,value])=>value!==undefined)));const inserted=await client.from(table).insert(clean);databaseError(`save ${table.replaceAll("_"," ")}`,inserted.error)}
