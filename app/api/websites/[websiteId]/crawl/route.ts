@@ -1,0 +1,5 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { enqueueCrawl } from "@/lib/data/crawl-runs";
+export const dynamic="force-dynamic";const schema=z.object({acknowledged:z.boolean(),trigger:z.enum(["manual","onboarding","retry"]).default("manual")});
+export async function POST(request:Request,{params}:{params:Promise<{websiteId:string}>}){const {websiteId}=await params;if(!z.string().uuid().safeParse(websiteId).success)return NextResponse.json({error:"Invalid website identifier."},{status:400});const parsed=schema.safeParse(await request.json().catch(()=>null));if(!parsed.success)return NextResponse.json({error:"Confirm website authorisation before starting."},{status:400});const result=await enqueueCrawl(websiteId,parsed.data.trigger,parsed.data.acknowledged);return result.error?NextResponse.json({error:result.error},{status:result.error.includes("already")?409:429}):NextResponse.json({crawlRunId:result.data},{status:202,headers:{"Cache-Control":"private, no-store"}})}

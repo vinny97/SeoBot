@@ -16,3 +16,41 @@ services:
         sync: false
       - key: NEXT_PUBLIC_DEMO_MODE
         value: "false"
+  - type: worker
+    name: seo-crawler-worker
+    runtime: node
+    buildCommand: npm ci && npm run build:worker
+    startCommand: npm run start:worker
+    envVars:
+      - key: NODE_VERSION
+        value: 24.14.1
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+      - key: CRAWLER_USER_AGENT
+        value: NorthstarCrawler/0.1
+      - key: CRAWLER_CONTACT_URL
+        sync: false
+      - key: CRAWLER_MAX_PAGES
+        value: "50"
+      - key: CRAWLER_MAX_DEPTH
+        value: "4"
+      - key: CRAWLER_CONCURRENCY
+        value: "2"
+      - key: CRAWLER_REQUEST_DELAY_MS
+        value: "750"
+      - key: CRAWLER_REQUEST_TIMEOUT_MS
+        value: "15000"
+      - key: CRAWLER_MAX_HTML_BYTES
+        value: "5000000"
+      - key: CRAWLER_MAX_SITEMAP_BYTES
+        value: "10000000"
+      - key: CRAWLER_MAX_REDIRECTS
+        value: "5"
+      - key: CRAWLER_WORKER_POLL_MS
+        value: "3000"
+      - key: CRAWLER_JOB_LOCK_MINUTES
+        value: "5"
+      - key: CRAWLER_MAX_DURATION_MS
+        value: "900000"

@@ -1,0 +1,3 @@
+User-agent: NorthstarCrawler
+Disallow: /private/
+Sitemap: http://fixture.test/sitemap.xml

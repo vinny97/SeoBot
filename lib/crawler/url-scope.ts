@@ -1,0 +1,3 @@
+import { getDomain } from "tldts";
+import { normaliseCrawlUrl } from "./url-normalisation.js";
+export function isWithinCrawlScope(candidate:string,start:string,includeSubdomains=false){const a=new URL(normaliseCrawlUrl(candidate));const b=new URL(normaliseCrawlUrl(start));if(a.hostname===b.hostname)return true;const aDomain=getDomain(a.hostname);const bDomain=getDomain(b.hostname);if(!aDomain||aDomain!==bDomain)return false;const apexWww=new Set([a.hostname.replace(/^www\./,""),b.hostname.replace(/^www\./,"")]).size===1;if(apexWww)return true;return includeSubdomains&&a.hostname.endsWith(`.${bDomain}`)}

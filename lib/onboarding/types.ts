@@ -26,6 +26,7 @@ export type OnboardingData = {
   competitors: CompetitorInput[];
   currentStep: number;
   completed: boolean;
+  crawlAuthorised: boolean;
 };
 
 export const defaultOnboardingData: OnboardingData = {
@@ -44,4 +45,5 @@ export const defaultOnboardingData: OnboardingData = {
   competitors: [],
   currentStep: 0,
   completed: false,
+  crawlAuthorised: false,
 };

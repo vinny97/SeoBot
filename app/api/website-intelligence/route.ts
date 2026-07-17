@@ -1,0 +1,1 @@
+import { NextResponse } from "next/server";import { readWebsiteOverview } from "@/lib/data/website-intelligence";export const dynamic="force-dynamic";export async function GET(){const data=await readWebsiteOverview();return data?NextResponse.json(data,{headers:{"Cache-Control":"private, no-store"}}):NextResponse.json({error:"Website not found."},{status:404})}

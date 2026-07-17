@@ -6,7 +6,7 @@ export const onboardingDraftSchema=z.object({
   audienceScope:businessSchema.shape.audienceScope,primaryConversion:z.string().min(1),brandTone:businessSchema.shape.brandTone,
   selectedGoals:z.array(z.string()).max(3),approvalPreference:goalsSchema.shape.approvalPreference,
   competitors:z.array(competitorSchema.extend({id:z.string().max(200),addedAt:z.string().optional()}).transform(item=>({...item,addedAt:item.addedAt||new Date(0).toISOString()}))).max(5),
-  currentStep:z.number().int().min(0).max(7),completed:z.boolean(),
+  currentStep:z.number().int().min(0).max(7),completed:z.boolean(),crawlAuthorised:z.boolean(),
 }).strict();
 export const onboardingPayloadSchema=onboardingDraftSchema.extend({
   businessDescription:businessSchema.shape.businessDescription,
@@ -14,5 +14,6 @@ export const onboardingPayloadSchema=onboardingDraftSchema.extend({
   services:z.array(z.string().trim().min(1)).min(1).max(20),
   targetCustomer:businessSchema.shape.targetCustomer,
   selectedGoals:goalsSchema.shape.selectedGoals,
+  crawlAuthorised:z.literal(true),
 });
 export type BackendOnboardingPayload=z.infer<typeof onboardingPayloadSchema>;

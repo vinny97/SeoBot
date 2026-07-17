@@ -2,11 +2,17 @@
   "name": "northstar-seo",
   "version": "0.1.0",
   "private": true,
-  "engines": { "node": ">=22.13.0" },
+  "type": "module",
+  "engines": {
+    "node": ">=22.19.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "dev:worker": "tsx workers/crawl-worker.ts",
+    "build:worker": "tsc -p tsconfig.worker.json",
+    "start:worker": "node dist-worker/workers/crawl-worker.js",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
@@ -18,28 +24,36 @@
     "supabase:types": "supabase gen types typescript --local --schema public > lib/supabase/database.types.ts"
   },
   "dependencies": {
-    "@tailwindcss/postcss": "latest",
     "@supabase/ssr": "0.12.3",
     "@supabase/supabase-js": "2.110.7",
+    "@tailwindcss/postcss": "latest",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "cheerio": "1.2.0",
     "clsx": "latest",
+    "fast-xml-parser": "5.10.1",
     "framer-motion": "latest",
+    "ipaddr.js": "2.4.0",
     "lucide-react": "latest",
     "next": "latest",
+    "p-limit": "7.3.0",
     "postcss": "8.5.10",
     "react": "latest",
     "react-dom": "latest",
-    "tailwindcss": "latest",
+    "robots-parser": "3.0.1",
     "tailwind-merge": "latest",
+    "tailwindcss": "latest",
+    "tldts": "7.4.9",
     "typescript": "5.9.3",
+    "undici": "8.7.0",
     "zod": "latest"
   },
   "devDependencies": {
     "eslint": "9.38.0",
     "eslint-config-next": "latest",
     "supabase": "2.109.1",
+    "tsx": "4.23.1",
     "vitest": "3.2.7"
   },
   "overrides": {

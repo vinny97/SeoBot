@@ -1,0 +1,1 @@
+export type ClaimedCrawlJob={job_id:string;crawl_run_id:string;project_id:string;website_id:string;url:string;attempt:number;max_attempts:number;max_pages:number;max_depth:number;configuration:{concurrency?:number;request_delay_ms?:number;respect_robots?:boolean;include_subdomains?:boolean;query_parameter_policy?:string}};
