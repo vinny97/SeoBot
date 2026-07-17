@@ -2,24 +2,32 @@
 
 :root {
   --background: #f7f5ef;
-  --surface: #fffdf8;
-  --ink: #1e2925;
+  --foreground: #1e2925;
+  --card: #fffdf8;
   --muted: #69736e;
-  --line: #dedfd8;
+  --border: #dedfd8;
   --accent: #2f705d;
   --accent-strong: #245746;
   --accent-soft: #e2eee8;
+  --success: #2f705d;
   --warning: #a55d20;
+  --error: #b34343;
+  --surface: var(--card);
+  --ink: var(--foreground);
+  --line: var(--border);
 }
 
 * { box-sizing: border-box; }
 html { background: var(--background); }
 body { margin: 0; color: var(--ink); background: var(--background); font-family: Arial, Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }
 button, input, textarea, select { font: inherit; }
-button { cursor: pointer; }
+button:not(:disabled) { cursor: pointer; }
+a, button { -webkit-tap-highlight-color: transparent; }
 ::selection { background: #c9dfd5; }
 .focus-ring:focus-visible { outline: 3px solid rgba(47,112,93,.2); outline-offset: 2px; }
 .soft-grid { background-image: linear-gradient(rgba(47,112,93,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(47,112,93,.035) 1px,transparent 1px); background-size: 32px 32px; }
 .page-enter { animation: rise .35s ease both; }
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
 @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }

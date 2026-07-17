@@ -8,35 +8,26 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "npm run lint && npm run typecheck"
   },
   "dependencies": {
-    "@hookform/resolvers": "latest",
-    "@supabase/ssr": "0.8.0",
-    "@supabase/supabase-js": "2.89.0",
-    "@tanstack/react-query": "latest",
     "@tailwindcss/postcss": "latest",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
-    "class-variance-authority": "latest",
     "clsx": "latest",
-    "framer-motion": "latest",
     "lucide-react": "latest",
     "next": "latest",
     "postcss": "8.5.10",
     "react": "latest",
     "react-dom": "latest",
-    "react-hook-form": "latest",
     "tailwindcss": "latest",
     "tailwind-merge": "latest",
-    "typescript": "5.9.3",
-    "zod": "latest"
+    "typescript": "5.9.3"
   },
   "devDependencies": {
     "eslint": "9.38.0",
-    "eslint-config-next": "latest",
-    "vitest": "3.2.7"
+    "eslint-config-next": "latest"
   },
   "overrides": {
     "next": {

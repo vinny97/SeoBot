@@ -2,7 +2,7 @@ export const productConfig = {
   name: "Northstar",
   description: "Your autonomous SEO employee for steady organic growth.",
   supportEmail: "support@northstar.example",
-  demoMode: process.env.NEXT_PUBLIC_DEMO_MODE !== "false",
+  demoMode: true,
   metadata: {
     title: "Northstar — Your SEO employee",
     description: "A calm, proactive SEO workspace that turns opportunities into completed work.",
@@ -23,5 +23,7 @@ export const productConfig = {
     billing: false,
     searchConsole: false,
     autonomousExecution: false,
+    authentication: false,
+    websiteAnalysis: false,
   },
 } as const;

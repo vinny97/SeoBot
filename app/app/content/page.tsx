@@ -1,7 +1,5 @@
-"use client";
 import { FileText } from "lucide-react";
-import { OpportunityList } from "@/components/opportunity-list";
 import { Badge, Card, PageHeader } from "@/components/ui";
-import { useProject } from "@/components/project-provider";
-
-export default function ContentPage(){const {project}=useProject();const items=project.opportunities.filter(o=>o.category==="Content");return <><PageHeader eyebrow="Content workflow" title="Content" description="Ideas and future drafts will move through a clear approval workflow. No articles are generated in V1."/><Card className="mb-6 p-5"><div className="flex gap-3"><FileText className="text-[var(--accent)]" size={21}/><div><h2 className="font-semibold">Future workflow</h2><div className="mt-3 flex flex-wrap gap-2">{["Idea","Brief requested","Brief ready","Drafting","Draft ready","Awaiting approval","Approved","Scheduled","Published","Refresh needed","Archived"].map(s=><Badge key={s}>{s}</Badge>)}</div></div></div></Card><OpportunityList items={items} contentMode/></>}
+import { SetupNotice } from "@/components/foundation";
+import { contentHypotheses } from "@/lib/mock/dashboard";
+export default function ContentPage(){return <><PageHeader eyebrow="Content foundation" title="Content opportunities" description="Potential ideas can be reviewed here before briefs, drafts or publishing are introduced."/><SetupNotice title="No articles are generated" description="Every item below is an initial hypothesis created only to demonstrate the future workflow."/><div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{contentHypotheses.map(item=><Card key={item.title} className="p-5"><div className="flex items-start justify-between gap-3"><span className="grid h-10 w-10 place-items-center rounded-xl bg-[var(--accent-soft)] text-[var(--accent)]"><FileText size={19}/></span><Badge tone="amber">Initial hypothesis</Badge></div><h2 className="mt-4 font-semibold">{item.title}</h2><p className="mt-2 text-sm leading-6 text-[var(--muted)]">{item.purpose}</p></Card>)}</div></>}

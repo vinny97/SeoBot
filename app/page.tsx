@@ -28,12 +28,7 @@ export default function Landing() {
           >
             Log in
           </Link>
-          <Link
-            href="/signup"
-            className="rounded-xl bg-[var(--ink)] px-4 py-2.5 text-sm font-semibold text-white"
-          >
-            Get started
-          </Link>
+          <Link href="/onboarding" className="rounded-xl bg-[var(--ink)] px-4 py-2.5 text-sm font-semibold text-white">Get started</Link>
         </div>
       </nav>
       <section className="soft-grid border-y border-[var(--line)]">
@@ -53,10 +48,10 @@ export default function Landing() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
-                href="/signup"
+                href="/onboarding"
                 className="inline-flex items-center gap-2 rounded-xl bg-[var(--accent)] px-5 py-3.5 font-semibold text-white shadow-sm"
               >
-                Build my first plan <ArrowRight size={18} />
+                Set up my workspace <ArrowRight size={18} />
               </Link>
               <Link
                 href="/login"
