@@ -7,11 +7,13 @@
   --muted: #69736e;
   --border: #dedfd8;
   --accent: #2f705d;
+  --accent-foreground: #ffffff;
   --accent-strong: #245746;
   --accent-soft: #e2eee8;
   --success: #2f705d;
   --warning: #a55d20;
   --error: #b34343;
+  --information: #55728d;
   --surface: var(--card);
   --ink: var(--foreground);
   --line: var(--border);

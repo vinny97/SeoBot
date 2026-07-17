@@ -14,6 +14,10 @@ export function StatusBadge({ status }: { status: WorkStatus }) {
   return <Badge tone={tones[status]}>{status}</Badge>;
 }
 
+export function ProgressBadge({ progress }: { progress: number }) {
+  return <Badge tone="blue">{progress}% complete</Badge>;
+}
+
 export function SectionHeader({ title, description, action }: { title: string; description?: string; action?: ReactNode }) {
   return <div className="mb-4 flex items-end justify-between gap-4"><div><h2 className="text-lg font-semibold tracking-[-.02em]">{title}</h2>{description && <p className="mt-1 text-sm text-[var(--muted)]">{description}</p>}</div>{action}</div>;
 }
@@ -36,6 +40,10 @@ export function SetupNotice({ title, description }: { title: string; description
 
 export function ComingSoonState({ title, description }: { title: string; description: string }) {
   return <Card className="p-6 text-center"><span className="mx-auto grid h-11 w-11 place-items-center rounded-full bg-[var(--accent-soft)] text-[var(--accent)]"><Clock3 size={20}/></span><Badge tone="amber"><span className="mt-4">Coming soon</span></Badge><h3 className="mt-3 font-semibold">{title}</h3><p className="mx-auto mt-1 max-w-md text-sm leading-6 text-[var(--muted)]">{description}</p></Card>;
+}
+
+export function IntegrationCard({ icon, title, purpose, enables }: { icon: ReactNode; title: string; purpose: string; enables: string }) {
+  return <Card className="flex h-full flex-col p-5"><div className="flex items-start justify-between"><span className="grid h-11 w-11 place-items-center rounded-xl bg-[var(--accent-soft)] text-[var(--accent)]">{icon}</span><Badge tone="amber">Coming soon</Badge></div><h2 className="mt-5 font-semibold">{title}</h2><p className="mt-2 text-sm leading-6 text-[var(--muted)]">{purpose}</p><div className="mt-4 flex-1 rounded-xl bg-[#f2f1ec] p-3"><p className="text-xs font-bold uppercase tracking-wider text-[var(--muted)]">Will enable</p><p className="mt-1 text-sm">{enables}</p></div><button disabled className="mt-4 w-full rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--muted)]">Connection unavailable</button></Card>;
 }
 
 export function ErrorState({ title = "Something went wrong", description }: { title?: string; description: string }) {

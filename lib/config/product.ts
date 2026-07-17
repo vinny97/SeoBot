@@ -7,6 +7,16 @@ export const productConfig = {
     title: "Northstar — Your SEO employee",
     description: "A calm, proactive SEO workspace that turns opportunities into completed work.",
   },
+  onboardingSteps: [
+    { id: "website", label: "Website" },
+    { id: "discovery", label: "Discovery" },
+    { id: "business", label: "Business" },
+    { id: "visibility", label: "Visibility" },
+    { id: "goals", label: "Goals" },
+    { id: "competitors", label: "Competitors" },
+    { id: "plan", label: "Plan" },
+    { id: "ready", label: "Ready" },
+  ],
   navigation: [
     { label: "Home", href: "/app", icon: "Home" },
     { label: "Activity", href: "/app/activity", icon: "Activity" },

@@ -1,13 +1,14 @@
 # Northstar roadmap
 
-V1 stops at the trustworthy product, data and workflow foundation.
+The current milestone stops at the visual product foundation and complete locally persisted onboarding experience.
 
-1. **Search Console and Analytics** — OAuth, verified properties, queries, impressions, clicks, CTR, average position, landing-page performance and traffic context.
-2. **Real keyword research** — provider integration, measured demand, difficulty, intent, topic clusters and SERP analysis.
-3. **Content workflow** — briefs, evidence, sources, brand voice, human review, drafts, images, internal links and publishing calendar.
-4. **Publishing integrations** — WordPress, Webflow, Shopify and custom webhooks with approvals and rollback history.
-5. **Existing-page improvements** — decay detection, metadata and heading recommendations, link suggestions and refresh workflows.
-6. **Competitor monitoring** — changed pages, new topics, content velocity, visibility and backlink changes from real providers.
-7. **Autonomous operation** — schedules, guardrails, approval rules, summaries, failure recovery and budget controls.
+1. **Authentication and durable persistence** — real accounts, secure project ownership, server-side validation and cross-device onboarding resume.
+2. **Verified website understanding** — safe metadata retrieval, explicit crawl boundaries and user confirmation of detected business context.
+3. **Search Console and Analytics** — verified properties, genuine queries, impressions, clicks and landing-page context.
+4. **Real keyword research** — measured demand, intent, topic groups and search-result analysis from an approved provider.
+5. **Content and page workflows** — evidence-backed briefs, drafts, human review, internal links and refresh recommendations.
+6. **Publishing integrations** — WordPress, Webflow and Shopify with approvals, audit history and rollback controls.
+7. **Competitor monitoring** — confirmed competitor changes and content themes from real sources.
+8. **Autonomous operation** — schedules, guardrails, approval rules, summaries, failure recovery and budget controls.
 
-Search Console and Analytics should come next because first-party data turns V1 hypotheses into evidence-backed priorities without prematurely generating or publishing content.
+Authentication and durable persistence should come next so the approved onboarding experience has a secure home before any real website or search data is collected.

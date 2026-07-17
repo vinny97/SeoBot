@@ -1,0 +1,8 @@
+"use client";
+import { SearchWindow } from "@/components/search-visual/search-window";
+import { OnboardingNavigation } from "@/components/onboarding/onboarding-navigation";
+import { StepIntro } from "@/components/onboarding/onboarding-shell";
+import { Card } from "@/components/ui";
+import type { OnboardingData } from "@/lib/onboarding/types";
+
+export function SearchVisibilityStep({data,back,next}:{data:OnboardingData;back:()=>void;next:()=>void}){return <><StepIntro eyebrow="Illustrative search experience" title="Let’s improve how often the right customers find you." description="See how clearer pages could help your business become more relevant for customer searches. This is not real ranking data."/><div className="grid gap-6 lg:grid-cols-[1.2fr_.8fr] lg:items-center"><SearchWindow data={data}/><Card className="p-6"><p className="text-xs font-bold uppercase tracking-[.16em] text-[var(--accent)]">Visibility opportunity</p><h2 className="mt-3 text-2xl font-semibold tracking-[-.025em]">Your website has room to become more visible for searches like these.</h2><p className="mt-3 leading-7 text-[var(--muted)]">A clearer page for <strong>{data.services[0]||"your main service"}</strong> could make the offer more useful to <strong>{data.targetCustomer||"the right customers"}</strong>.</p><div className="mt-5 space-y-3 text-sm">{["Example customer searches","Illustrative competitor positioning","An initial opportunity for your business","Real performance data still required"].map(item=><div key={item} className="flex gap-3 rounded-xl bg-[#f2f1ec] p-3"><span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-[var(--accent)]"/><span>{item}</span></div>)}</div></Card></div><OnboardingNavigation back={back} onNext={next} nextLabel="Build my SEO goals"/></>}
