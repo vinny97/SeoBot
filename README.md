@@ -1,63 +1,42 @@
-# Northstar foundation
+# Northstar SEO
 
-Northstar is a calm application shell for a future autonomous SEO employee. This milestone contains a complete visual onboarding journey, reusable product routes and components, deterministic demonstration data, local persistence, and a deploy-ready Next.js foundation.
-
-It intentionally does **not** include authentication, Supabase, crawling, AI generation, keyword providers, analytics, billing, publishing, or fake SEO metrics.
+Northstar is a Next.js micro-SaaS foundation with Supabase authentication, private workspaces, persistent onboarding, project-specific starting records, and Row Level Security. It intentionally does not crawl websites, call AI or SEO providers, publish content, schedule workers, or show fabricated SEO metrics.
 
 ## Local development
 
 ```sh
 npm ci
+cp .env.example .env.local
 npm run dev
 ```
 
-No environment variables are required.
+Use Node 22.13 or newer. Configure Supabase using [docs/supabase-setup.md](docs/supabase-setup.md). Set `NEXT_PUBLIC_DEMO_MODE=true` only when reviewing the standalone local visual demo.
 
-## Quality checks
+## Checks
 
 ```sh
 npm run lint
 npm run typecheck
+npm test
 npm run build
 ```
 
-## Render
+With Docker and the local Supabase stack available, also run:
 
-- Runtime: Node
-- Root directory: leave blank
-- Build command: `npm ci && npm run build`
-- Start command: `npm run start`
-- Health check path: `/api/health`
+```sh
+npm run supabase:reset
+npm run supabase:lint
+npx supabase test db
+npm run supabase:types
+```
 
-The standard Next.js production server reads Render's `PORT` automatically.
+## Application behavior
 
-## Routes
+- Email/password signup, confirmation, login, recovery, password update, logout and optional Google OAuth use cookie-based Supabase SSR sessions.
+- Next.js `proxy.ts` refreshes sessions and protects `/app` and `/onboarding` without database work on static assets.
+- Onboarding drafts save after each completed step and resume from Supabase.
+- Completion atomically normalizes business, website, goals, settings and competitors, then creates clearly labeled deterministic starting records.
+- Dashboard, activity, opportunities, topics, content, competitors and settings read or mutate the signed-in user's current project through RLS.
+- Existing LocalStorage onboarding is offered as an explicit one-time import and is cleared only after a confirmed server save.
 
-- `/` — small product landing page
-- `/login`, `/signup`, `/forgot-password` — visual auth placeholders only
-- `/onboarding` — persisted eight-step visual onboarding journey
-- `/app` — onboarding-driven demonstration employee dashboard
-- `/app/activity` — filterable demonstration timeline
-- `/app/opportunities` — qualitative opportunities with local status actions
-- `/app/keywords` — example topic hypotheses
-- `/app/content` — example content hypotheses with local status actions
-- `/app/competitors` — locally editable confirmed competitors
-- `/app/website` — demonstration website profile
-- `/app/integrations` — honest coming-soon integrations
-- `/app/settings` — locally saved context and accessible demo reset
-- `/api/health` — minimal Render health response
-
-## Onboarding and demo persistence
-
-Onboarding has eight steps: website, deterministic discovery preview, business understanding, an original illustrative search experience, goals, competitors, initial plan, and employee ready. The current step and answers are stored under one versioned localStorage boundary through `hooks/use-onboarding.ts`. The same answers drive the dashboard and product-route mock generators.
-
-Demo opportunity and content status changes use a separate versioned localStorage record. Settings provides an accessible confirmation dialog that clears both records and returns to onboarding.
-
-## Deliberate limitations
-
-- Discovery and search visuals are illustrative and make no network requests.
-- No exact rankings, search volume, traffic or authority metrics are shown.
-- Authentication, accounts, database persistence, AI, crawling and integrations remain unimplemented.
-- Clearing browser storage or using another device starts a fresh demonstration.
-
-The recommended next milestone is authentication and durable project persistence, after this visual experience has been reviewed and approved.
+See [docs/supabase-setup.md](docs/supabase-setup.md) for Supabase and Render deployment steps.

@@ -1,0 +1,6 @@
+import { NextResponse } from "next/server";
+import { competitorSchema, normaliseWebsite } from "@/lib/onboarding/schema";
+import { getCurrentProject } from "@/lib/auth/server";
+import { createClient } from "@/lib/supabase/server";
+
+export async function POST(request:Request){const project=await getCurrentProject();const supabase=await createClient();if(!project||!supabase)return NextResponse.json({error:"Authentication required."},{status:401});const parsed=competitorSchema.safeParse(await request.json().catch(()=>null));if(!parsed.success)return NextResponse.json({error:"Check the competitor details.",fieldErrors:parsed.error.flatten().fieldErrors},{status:400});const url=normaliseWebsite(parsed.data.websiteUrl);const domain=new URL(url).hostname.replace(/^www\./,"").toLowerCase();const {error}=await supabase.from("competitors").insert({project_id:project.id,name:parsed.data.name,url,domain,notes:parsed.data.note,status:"confirmed",source:"user",confirmed_at:new Date().toISOString()});if(error)return NextResponse.json({error:error.code==="23505"?"That competitor is already in this project.":"The competitor could not be saved."},{status:400});return NextResponse.json({success:true},{status:201})}

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { clearDemoWorkspace, loadDemoStatuses, loadOnboarding, saveDemoStatuses, saveOnboarding } from "@/lib/onboarding/storage";
 import { defaultOnboardingData, type OnboardingData } from "@/lib/onboarding/types";
 
-export function useOnboardingState() {
+export function useOnboardingState(persistLocally = true) {
   const [data, setData] = useState<OnboardingData>(defaultOnboardingData);
   const [statuses, setStatuses] = useState<Record<string, string>>({});
   const dataRef = useRef(defaultOnboardingData);
@@ -13,8 +13,8 @@ export function useOnboardingState() {
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
-      const savedData = loadOnboarding();
-      const savedStatuses = loadDemoStatuses();
+      const savedData = persistLocally ? loadOnboarding() : defaultOnboardingData;
+      const savedStatuses = persistLocally ? loadDemoStatuses() : {};
       dataRef.current = savedData;
       statusesRef.current = savedStatuses;
       setData(savedData);
@@ -22,26 +22,32 @@ export function useOnboardingState() {
       setHydrated(true);
     });
     return () => window.cancelAnimationFrame(frame);
-  }, []);
+  }, [persistLocally]);
   const update = useCallback((patch: Partial<OnboardingData>) => {
     const next = { ...dataRef.current, ...patch };
     dataRef.current = next;
-    saveOnboarding(next);
+    if (persistLocally) saveOnboarding(next);
     setData(next);
-  }, []);
+  }, [persistLocally]);
   const goToStep = useCallback((currentStep: number) => {
     const next = { ...dataRef.current, currentStep: Math.max(0, Math.min(7, currentStep)) };
     dataRef.current = next;
-    saveOnboarding(next);
+    if (persistLocally) saveOnboarding(next);
     setData(next);
-  }, []);
+  }, [persistLocally]);
   const setDemoStatus = useCallback((id: string, status: string) => {
     const next = { ...statusesRef.current, [id]: status };
     statusesRef.current = next;
-    saveDemoStatuses(next);
+    if (persistLocally) saveDemoStatuses(next);
     setStatuses(next);
-  }, []);
+  }, [persistLocally]);
+  const replace = useCallback((next: OnboardingData) => {
+    dataRef.current = next;
+    if (persistLocally) saveOnboarding(next);
+    setData(next);
+  }, [persistLocally]);
+  const getCurrent = useCallback(() => dataRef.current, []);
   const reset = useCallback(() => { clearDemoWorkspace(); dataRef.current=defaultOnboardingData; statusesRef.current={}; setData(defaultOnboardingData); setStatuses({}); }, []);
 
-  return { data, statuses, hydrated, update, goToStep, setDemoStatus, reset };
+  return { data, statuses, hydrated, update, goToStep, setDemoStatus, reset, replace, getCurrent };
 }

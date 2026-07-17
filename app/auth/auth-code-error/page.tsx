@@ -1,0 +1,3 @@
+import Link from "next/link";
+import { AlertTriangle } from "lucide-react";
+export default function AuthCodeErrorPage(){return <main className="grid min-h-screen place-items-center px-5"><div className="w-full max-w-md rounded-3xl border border-red-200 bg-[var(--card)] p-7 text-center"><AlertTriangle className="mx-auto text-[var(--error)]" size={40}/><h1 className="mt-4 text-2xl font-semibold">We couldn’t complete authentication</h1><p className="mt-2 text-sm leading-6 text-[var(--muted)]">The link may have expired or the provider may not be configured. Try again from the login page.</p><Link href="/login" className="focus-ring mt-6 inline-flex rounded-xl bg-[var(--accent)] px-5 py-3 font-semibold text-white">Return to login</Link></div></main>}
