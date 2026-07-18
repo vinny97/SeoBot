@@ -37,6 +37,9 @@ type Run = {
   started_at: string | null;
   completed_at: string | null;
   error_summary: string | null;
+  provider: "native" | "siteone";
+  provider_version: string | null;
+  completion_reason: string | null;
   created_at: string;
 };
 type Page = {
@@ -505,11 +508,15 @@ export default function WebsitePage() {
                     {run.trigger_type.replaceAll("_", " ")} crawl
                   </h2>
                   <Badge>{run.status.replaceAll("_", " ")}</Badge>
+                  <Badge>{run.provider === "siteone" ? "SiteOne crawler" : "Native crawler"}</Badge>
                 </div>
                 <p className="mt-2 text-sm text-[var(--muted)]">
                   {new Date(run.created_at).toLocaleString()} ·{" "}
                   {run.pages_succeeded} successful · {run.pages_failed} failed ·{" "}
                   {run.pages_skipped} skipped
+                  {run.completion_reason && run.completion_reason !== "completed"
+                    ? ` · ${run.completion_reason.replaceAll("_", " ")}`
+                    : ""}
                 </p>
                 {run.error_summary && (
                   <p className="mt-2 text-sm text-[var(--error)]">

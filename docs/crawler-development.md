@@ -4,7 +4,9 @@
 
 The Next.js application authenticates the user and calls `enqueue_website_crawl`. That database function derives the project from the website, checks consent, cooldowns, daily limits and active-run deduplication, then creates a crawl run and queued `seo_jobs` record in one transaction. The HTTP request returns immediately.
 
-The standalone worker polls PostgreSQL, claims one job with `FOR UPDATE SKIP LOCKED`, writes observations progressively, heartbeats its expiring lock, and completes, retries or fails the same run. Browser requests never crawl pages.
+The queue processor polls PostgreSQL, claims one job with `FOR UPDATE SKIP LOCKED`, writes observations progressively, heartbeats its expiring lock, and completes, retries or fails the same run. Browser requests never crawl pages. Production currently launches it beside Next.js in the same Render web service to avoid a second paid instance.
+
+SiteOne is available as an internal-only second provider on a Raspberry Pi. It uses capability-specific jobs, a hashed worker credential and run-specific observations. See `crawler-provider-architecture.md`, `siteone-security.md` and `siteone-pi-installation.md`.
 
 ## Local setup
 

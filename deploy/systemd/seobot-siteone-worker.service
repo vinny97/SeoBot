@@ -1,0 +1,26 @@
+[Unit]
+Description=SEOBot SiteOne crawler worker
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=seobot-worker
+Group=seobot-worker
+WorkingDirectory=/opt/seobot-worker
+EnvironmentFile=/etc/seobot-siteone-worker.env
+ExecStart=/usr/bin/node /opt/seobot-worker/dist-siteone-worker/workers/siteone-pi-worker.js
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=30
+KillSignal=SIGTERM
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/DATA/seobot/crawls
+RestrictSUIDSGID=true
+LockPersonality=true
+
+[Install]
+WantedBy=multi-user.target

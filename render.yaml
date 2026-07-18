@@ -2,8 +2,8 @@ services:
   - type: web
     name: northstar-seo
     runtime: node
-    buildCommand: npm ci && npm run build
-    startCommand: npm run start
+    buildCommand: npm ci && npm run build && npm run build:worker
+    startCommand: npm run start:production
     healthCheckPath: /api/health
     envVars:
       - key: NODE_VERSION
@@ -16,16 +16,6 @@ services:
         sync: false
       - key: NEXT_PUBLIC_DEMO_MODE
         value: "false"
-  - type: worker
-    name: seo-crawler-worker
-    runtime: node
-    buildCommand: npm ci && npm run build:worker
-    startCommand: npm run start:worker
-    envVars:
-      - key: NODE_VERSION
-        value: 24.14.1
-      - key: NEXT_PUBLIC_SUPABASE_URL
-        sync: false
       - key: SUPABASE_SECRET_KEY
         sync: false
       - key: CRAWLER_USER_AGENT

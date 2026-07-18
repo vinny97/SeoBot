@@ -1,0 +1,10 @@
+import { createHash, randomBytes } from "node:crypto";
+import { loadEnvConfig } from "@next/env";
+import { createClient } from "@supabase/supabase-js";
+loadEnvConfig(process.cwd());
+const projectId=process.argv[2];if(!projectId)throw new Error("Usage: npm run siteone:provision -- <project-id>");
+const url=process.env.NEXT_PUBLIC_SUPABASE_URL;const secret=process.env.SUPABASE_SECRET_KEY||process.env.SUPABASE_SERVICE_ROLE_KEY;if(!url||!secret)throw new Error("Supabase URL and server secret are required locally.");
+const token=`s1w_${randomBytes(32).toString("base64url")}`;const hash=createHash("sha256").update(token).digest("hex");const client=createClient(url,secret,{auth:{persistSession:false}});
+const {error:credentialError}=await client.from("crawler_worker_credentials").insert({name:`siteone-pi-${Date.now()}`,token_hash:hash,capabilities:["siteone_crawler"]});if(credentialError)throw credentialError;
+const {error:allowError}=await client.from("siteone_allowed_projects").upsert({project_id:projectId});if(allowError)throw allowError;
+console.log("Worker credential created. Copy this value once into /etc/seobot-siteone-worker.env as SITEONE_WORKER_TOKEN:");console.log(token);

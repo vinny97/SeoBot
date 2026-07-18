@@ -1,0 +1,26 @@
+{
+  "crawler": { "name": "SiteOne Crawler", "version": "2.5.1.20260627", "executedAt": "2026-07-17 21:28:40" },
+  "results": [
+    { "url": "https://example.com/", "status": "200", "elapsedTime": 0.12, "size": 12000, "type": 1 },
+    { "url": "https://example.com/about", "status": "200", "elapsedTime": 0.2, "size": 9000, "type": 1 },
+    { "url": "https://example.com/missing", "status": "404", "elapsedTime": 0.1, "size": 500, "type": 1 }
+  ],
+  "stats": { "totalUrls": 3 },
+  "tables": {
+    "seo": { "rows": [
+      { "urlPathAndQuery": "/", "title": "Example", "description": "Example home page", "h1": "Welcome", "robotsIndex": "1" },
+      { "urlPathAndQuery": "/about", "title": "", "description": "", "h1": "About", "robotsIndex": "0" }
+    ] },
+    "seo-headings": { "rows": [
+      { "urlPathAndQuery": "/", "headings": "<h1> Welcome <h2> Services" },
+      { "urlPathAndQuery": "/about", "headings": "<h1> About" }
+    ] },
+    "404": { "rows": [
+      { "sourceUqId": "https://example.com/", "statusCode": "404", "url": "https://example.com/missing" }
+    ] },
+    "redirects": { "rows": [] },
+    "skipped": { "rows": [] },
+    "futureAdditiveSection": { "rows": [] }
+  },
+  "qualityScores": { "overall": 9.9 }
+}

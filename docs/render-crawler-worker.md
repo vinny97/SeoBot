@@ -1,17 +1,18 @@
-# Render crawler worker
+# Render crawler on one web service
 
-The repository now contains a second service in `render.yaml`. If the existing web service is managed manually, add the worker manually instead of replacing that service.
+The crawler runs as a second process inside the existing Render web service. This avoids a separate paid background-worker instance while preserving the PostgreSQL queue, job locking, retries and cancellation.
 
-## Service settings
+On a free or sleeping web service, queued crawls pause while the service is asleep and resume after it wakes. A restart can interrupt an active crawl; its expiring database lock makes it eligible for retry.
 
-- Type: **Background Worker**
-- Repository and branch: the same production repository and branch as the web service
-- Root directory: the same repository root
+## Web service settings
+
+- Type: **Web Service**
+- Root directory: repository root
 - Runtime: Node
 - Node version: `24.14.1`
-- Build command: `npm ci && npm run build:worker`
-- Start command: `npm run start:worker`
-- No HTTP port or health-check path
+- Build command: `npm ci && npm run build && npm run build:worker`
+- Start command: `npm run start:production`
+- Health-check path: `/api/health`
 
 Required environment variables:
 
@@ -33,13 +34,13 @@ CRAWLER_JOB_LOCK_MINUTES=5
 CRAWLER_MAX_DURATION_MS=900000
 ```
 
-Use the current Supabase server secret. Never copy it to a `NEXT_PUBLIC_` variable or the web browser. The project URL must match the web service.
+Add these alongside the existing web environment variables. Use the current Supabase server secret. Never copy it to a `NEXT_PUBLIC_` variable or browser code.
 
 ## Deployment verification
 
 1. Apply `202607170002_website_intelligence.sql` after the foundation migration.
-2. Deploy the web service and background worker from the same commit.
-3. Confirm worker logs contain `Crawler worker started.` without configuration errors.
+2. Deploy the single web service.
+3. Confirm logs contain both the Next.js startup message and `Crawler worker started.` without configuration errors.
 4. Confirm `worker_heartbeats.last_heartbeat_at` updates in Supabase.
 5. Request a crawl from onboarding or Website Intelligence.
 6. Confirm the crawl changes from queued to running, counters increase, then it reaches a final state.
