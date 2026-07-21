@@ -28,7 +28,7 @@ export function requireSupabaseEnv() {
 }
 
 export function getAppUrl() {
-  const value = process.env.NEXT_PUBLIC_APP_URL;
+  const value = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL;
   return value && z.string().url().safeParse(value).success ? value.replace(/\/$/,"") : "http://localhost:3000";
 }
 

@@ -111,6 +111,87 @@ export type Database = {
           },
         ]
       }
+      article_publications: {
+        Row: {
+          content_hash: string | null
+          content_item_id: string | null
+          created_at: string
+          id: string
+          idempotency_key: string
+          last_error_code: string | null
+          last_error_message: string | null
+          last_synced_at: string | null
+          last_synced_hash: string | null
+          metadata: Json
+          provider: string
+          publication_kind: string
+          published_at: string | null
+          publishing_connection_id: string
+          remote_admin_url: string | null
+          remote_article_id: string | null
+          remote_status: string
+          remote_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          content_hash?: string | null
+          content_item_id?: string | null
+          created_at?: string
+          id?: string
+          idempotency_key: string
+          last_error_code?: string | null
+          last_error_message?: string | null
+          last_synced_at?: string | null
+          last_synced_hash?: string | null
+          metadata?: Json
+          provider: string
+          publication_kind?: string
+          published_at?: string | null
+          publishing_connection_id: string
+          remote_admin_url?: string | null
+          remote_article_id?: string | null
+          remote_status?: string
+          remote_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          content_hash?: string | null
+          content_item_id?: string | null
+          created_at?: string
+          id?: string
+          idempotency_key?: string
+          last_error_code?: string | null
+          last_error_message?: string | null
+          last_synced_at?: string | null
+          last_synced_hash?: string | null
+          metadata?: Json
+          provider?: string
+          publication_kind?: string
+          published_at?: string | null
+          publishing_connection_id?: string
+          remote_admin_url?: string | null
+          remote_article_id?: string | null
+          remote_status?: string
+          remote_url?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "article_publications_content_item_id_fkey"
+            columns: ["content_item_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "article_publications_publishing_connection_id_fkey"
+            columns: ["publishing_connection_id"]
+            isOneToOne: false
+            referencedRelation: "publishing_connections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       business_profiles: {
         Row: {
           audience_scope: string | null
@@ -1116,6 +1197,115 @@ export type Database = {
             columns: ["target_page_id"]
             isOneToOne: false
             referencedRelation: "website_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      publishing_connections: {
+        Row: {
+          callback_state_hash: string | null
+          composio_auth_config_id: string
+          composio_connected_account_id: string | null
+          composio_user_id: string
+          connection_method: string
+          created_at: string
+          disconnected_at: string | null
+          external_account_id: string | null
+          external_account_name: string | null
+          external_site_url: string | null
+          granted_scopes: string[]
+          id: string
+          is_default: boolean
+          last_checked_at: string | null
+          last_connected_at: string | null
+          last_error_code: string | null
+          last_error_message: string | null
+          last_used_at: string | null
+          metadata: Json
+          project_id: string
+          provider: string
+          status: string
+          updated_at: string
+          user_id: string
+          website_id: string | null
+          workspace_id: string
+        }
+        Insert: {
+          callback_state_hash?: string | null
+          composio_auth_config_id: string
+          composio_connected_account_id?: string | null
+          composio_user_id: string
+          connection_method: string
+          created_at?: string
+          disconnected_at?: string | null
+          external_account_id?: string | null
+          external_account_name?: string | null
+          external_site_url?: string | null
+          granted_scopes?: string[]
+          id?: string
+          is_default?: boolean
+          last_checked_at?: string | null
+          last_connected_at?: string | null
+          last_error_code?: string | null
+          last_error_message?: string | null
+          last_used_at?: string | null
+          metadata?: Json
+          project_id: string
+          provider: string
+          status?: string
+          updated_at?: string
+          user_id: string
+          website_id?: string | null
+          workspace_id: string
+        }
+        Update: {
+          callback_state_hash?: string | null
+          composio_auth_config_id?: string
+          composio_connected_account_id?: string | null
+          composio_user_id?: string
+          connection_method?: string
+          created_at?: string
+          disconnected_at?: string | null
+          external_account_id?: string | null
+          external_account_name?: string | null
+          external_site_url?: string | null
+          granted_scopes?: string[]
+          id?: string
+          is_default?: boolean
+          last_checked_at?: string | null
+          last_connected_at?: string | null
+          last_error_code?: string | null
+          last_error_message?: string | null
+          last_used_at?: string | null
+          metadata?: Json
+          project_id?: string
+          provider?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+          website_id?: string | null
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "publishing_connections_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "publishing_connections_website_id_fkey"
+            columns: ["website_id"]
+            isOneToOne: false
+            referencedRelation: "websites"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "publishing_connections_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
         ]

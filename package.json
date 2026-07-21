@@ -30,6 +30,7 @@
     "supabase:types": "supabase gen types typescript --local --schema public > lib/supabase/database.types.ts"
   },
   "dependencies": {
+    "@composio/core": "0.14.0",
     "@supabase/ssr": "0.12.3",
     "@supabase/supabase-js": "2.110.7",
     "@tailwindcss/postcss": "latest",
