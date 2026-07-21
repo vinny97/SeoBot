@@ -1,11 +1,11 @@
 export const productConfig = {
-  name: "SEObot",
+  name: "Searchhand",
   description: "An SEO agent that inspects, improves and verifies your website.",
-  supportEmail: "support@seobot.example",
+  supportEmail: "support@searchhand.example",
   demoMode: true,
   metadata: {
-    title: "SEObot — Your SEO is being handled",
-    description: "SEObot inspects your website, finds valuable work, prepares improvements and asks for approval before anything is published.",
+    title: "Searchhand — Your SEO is being handled",
+    description: "Searchhand inspects your website, finds valuable work, prepares improvements and asks for approval before anything is published.",
   },
   onboardingSteps: [
     { id: "website", label: "Website" },
