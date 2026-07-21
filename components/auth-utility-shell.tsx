@@ -1,0 +1,10 @@
+import Link from "next/link";
+import { Check, Route, ShieldCheck, Target } from "lucide-react";
+import { FlightBrand } from "@/components/flight/flight-deck";
+
+export function AuthUtilityShell({ eyebrow, title, copy, children }: { eyebrow: string; title: string; copy: string; children: React.ReactNode }) {
+  return <main className="grid min-h-screen bg-[var(--flight-bg)] lg:grid-cols-[.9fr_1.1fr]">
+    <aside className="relative hidden overflow-hidden bg-[var(--flight-night)] p-12 text-white lg:flex lg:flex-col lg:justify-between"><div aria-hidden="true" className="flight-grid-night absolute inset-0"/><Link href="/" className="relative focus-ring inline-flex self-start rounded-full"><FlightBrand inverse/></Link><div className="relative max-w-lg"><p className="font-mono text-[10px] font-bold tracking-[.17em] text-[#a99fff]">SECURE FLIGHT DECK ACCESS</p><h1 className="mt-6 text-5xl font-semibold tracking-[-.06em]">Keep your route secure.<br/><span className="text-white/35">Return when you’re ready.</span></h1><div className="mt-9 space-y-3">{[[Target,"Your destination stays saved"],[Route,"Your flight plan remains available"],[ShieldCheck,"Account access stays protected"]].map(([Icon,label])=><div key={label as string} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[.035] p-4 text-sm text-white/65"><Icon size={17} className="text-[#a99fff]"/>{label as string}<Check size={14} className="ml-auto text-[#65c99e]"/></div>)}</div></div><p className="relative font-mono text-[9px] tracking-[.13em] text-white/25">SEARCHHAND · ACCOUNT SECURITY</p></aside>
+    <section className="flex items-center justify-center px-5 py-12"><div className="w-full max-w-md"><Link href="/" className="mb-10 inline-flex lg:hidden"><FlightBrand/></Link><p className="font-mono text-[10px] font-bold tracking-[.17em] text-[var(--flight-blue)]">{eyebrow}</p><h2 className="mt-4 text-4xl font-semibold tracking-[-.05em]">{title}</h2><p className="mt-3 leading-7 text-[var(--flight-muted)]">{copy}</p><div className="mt-7">{children}</div></div></section>
+  </main>;
+}

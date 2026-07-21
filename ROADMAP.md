@@ -1,4 +1,4 @@
-# Northstar roadmap
+# Searchhand roadmap
 
 The current milestone stops at the visual product foundation and complete locally persisted onboarding experience.
 

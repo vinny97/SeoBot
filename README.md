@@ -1,6 +1,6 @@
-# Northstar SEO
+# Searchhand
 
-Northstar is a Next.js micro-SaaS foundation with Supabase authentication, private workspaces, persistent onboarding, Row Level Security, and a conservative HTML-first website-intelligence crawler. It does not call AI or SEO providers, execute remote JavaScript, publish content, schedule recurring crawls, or show fabricated SEO metrics.
+Searchhand is a Next.js SEO-agent workspace with Supabase authentication, private workspaces, persistent onboarding, Row Level Security, and a conservative HTML-first website-intelligence crawler. It does not call AI or SEO providers, execute remote JavaScript, publish content, schedule recurring crawls, or show fabricated SEO metrics.
 
 ## Local development
 

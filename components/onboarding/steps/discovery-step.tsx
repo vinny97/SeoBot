@@ -136,9 +136,9 @@ export function DiscoveryStep({
   return (
     <>
       <StepIntro
-        eyebrow="Live website analysis"
-        title={`Learning how ${data.businessName} is organised.`}
-        description="A separate low-rate worker is reading public HTML. You can continue while it runs and return later."
+        eyebrow="Live pre-flight check"
+        title={`Mapping how ${data.businessName} is organised.`}
+        description="Searchhand is reading permitted public pages at a low rate. You can continue while pre-flight runs and return later."
       />
       {error && (
         <p role="alert" className="mb-4 text-sm text-[var(--error)]">
