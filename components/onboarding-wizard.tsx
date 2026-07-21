@@ -15,14 +15,14 @@ import { ReadyStep } from "@/components/onboarding/steps/ready-step";
 import { useDemo } from "@/components/demo-provider";
 import { Button, Card } from "@/components/ui";
 
-export function OnboardingWizard() {
+export function OnboardingWizard({initialWebsite=""}:{initialWebsite?:string}) {
   const {data,hydrated,loading,saving,error,legacyData,update,goToStep,saveProgress,completeOnboarding,importLegacy,dismissLegacy}=useDemo();const router=useRouter();const reduce=useReducedMotion();const step=data.currentStep;
   async function go(next:number){if(await saveProgress(next)){goToStep(next);window.scrollTo({top:0,behavior:reduce?"auto":"smooth"})}}
   async function finish(){if(await completeOnboarding()){update({completed:true,currentStep:7});router.push("/app");router.refresh()}}
   if(!hydrated||loading)return <main className="mx-auto min-h-screen max-w-4xl px-5 py-12"><LoadingSkeleton/></main>;
   if(legacyData)return <main className="grid min-h-screen place-items-center px-5"><Card className="max-w-xl p-7"><p className="text-sm font-semibold uppercase tracking-wider text-[var(--accent)]">Saved setup found</p><h1 className="mt-2 text-2xl font-semibold">Continue with the answers saved on this device?</h1><p className="mt-3 text-sm leading-6 text-[var(--muted)]">We found your earlier local demonstration setup for {legacyData.businessName||legacyData.websiteUrl}. Importing copies validated answers into your private account. Local data is removed only after the server confirms the save.</p>{error&&<p role="alert" className="mt-4 text-sm text-[var(--error)]">{error}</p>}<div className="mt-6 flex flex-wrap gap-3"><Button disabled={saving} onClick={async()=>{await importLegacy()}}>{saving?"Importing…":"Import saved setup"}</Button><Button variant="ghost" disabled={saving} onClick={dismissLegacy}>Start fresh</Button></div></Card></main>;
   const content=[
-    <WebsiteStep key="website" data={data} update={update} next={()=>go(1)}/>,
+    <WebsiteStep key="website" data={data} initialWebsite={initialWebsite} update={update} next={()=>go(1)}/>,
     <DiscoveryStep key="discovery" data={data} back={()=>go(0)} next={()=>go(2)}/>,
     <BusinessStep key="business" data={data} update={update} back={()=>go(1)} next={()=>go(3)}/>,
     <SearchVisibilityStep key="visibility" data={data} back={()=>go(2)} next={()=>go(4)}/>,

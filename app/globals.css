@@ -1,19 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f5ef;
-  --foreground: #1e2925;
-  --card: #fffdf8;
-  --muted: #69736e;
-  --border: #dedfd8;
-  --accent: #2f705d;
+  --background: #f7f5f0;
+  --foreground: #171717;
+  --card: #fffefb;
+  --muted: #68645d;
+  --border: #dedad1;
+  --accent: #f26a2e;
   --accent-foreground: #ffffff;
-  --accent-strong: #245746;
-  --accent-soft: #e2eee8;
-  --success: #2f705d;
-  --warning: #a55d20;
-  --error: #b34343;
-  --information: #55728d;
+  --accent-strong: #d95620;
+  --accent-soft: #fff0e8;
+  --agent: #6d5dfb;
+  --agent-soft: #efedff;
+  --success: #2f9d68;
+  --warning: #d89522;
+  --error: #d95050;
+  --information: #6d5dfb;
   --surface: var(--card);
   --ink: var(--foreground);
   --line: var(--border);
@@ -25,11 +27,16 @@ body { margin: 0; color: var(--ink); background: var(--background); font-family:
 button, input, textarea, select { font: inherit; }
 button:not(:disabled) { cursor: pointer; }
 a, button { -webkit-tap-highlight-color: transparent; }
-::selection { background: #c9dfd5; }
-.focus-ring:focus-visible { outline: 3px solid rgba(47,112,93,.2); outline-offset: 2px; }
-.soft-grid { background-image: linear-gradient(rgba(47,112,93,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(47,112,93,.035) 1px,transparent 1px); background-size: 32px 32px; }
+::selection { background: #ffd8c7; }
+.focus-ring:focus-visible { outline: 3px solid rgba(242,106,46,.24); outline-offset: 2px; }
+.soft-grid { background-image: linear-gradient(rgba(23,23,23,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(23,23,23,.035) 1px,transparent 1px); background-size: 32px 32px; }
+.blueprint-grid { background-image: linear-gradient(rgba(109,93,251,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(109,93,251,.07) 1px,transparent 1px); background-size: 24px 24px; }
+.workshop-shadow { box-shadow: 0 28px 80px rgba(23,23,23,.11), 0 2px 8px rgba(23,23,23,.04); }
+.text-balance { text-wrap: balance; }
+.scan-line { animation: scan 4s ease-in-out infinite; }
 .page-enter { animation: rise .35s ease both; }
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes scan { 0%,100% { transform: translateY(0); opacity: .3; } 50% { transform: translateY(132px); opacity: .9; } }
 @media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }

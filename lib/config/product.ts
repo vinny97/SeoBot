@@ -1,11 +1,11 @@
 export const productConfig = {
-  name: "Northstar",
-  description: "Your autonomous SEO employee for steady organic growth.",
-  supportEmail: "support@northstar.example",
+  name: "SEObot",
+  description: "An SEO agent that inspects, improves and verifies your website.",
+  supportEmail: "support@seobot.example",
   demoMode: true,
   metadata: {
-    title: "Northstar — Your SEO employee",
-    description: "A calm, proactive SEO workspace that turns opportunities into completed work.",
+    title: "SEObot — Your SEO is being handled",
+    description: "SEObot inspects your website, finds valuable work, prepares improvements and asks for approval before anything is published.",
   },
   onboardingSteps: [
     { id: "website", label: "Website" },
