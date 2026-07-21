@@ -292,6 +292,118 @@ export type Database = {
           },
         ]
       }
+      crawl_comparison_groups: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          created_by: string
+          id: string
+          native_crawl_run_id: string
+          project_id: string
+          promoted_at: string | null
+          promoted_by: string | null
+          promoted_crawl_run_id: string | null
+          promoted_provider: string | null
+          review_notes: string | null
+          review_result: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          siteone_crawl_run_id: string
+          status: string
+          summary: Json
+          updated_at: string
+          website_id: string
+          workspace_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          created_by: string
+          id?: string
+          native_crawl_run_id: string
+          project_id: string
+          promoted_at?: string | null
+          promoted_by?: string | null
+          promoted_crawl_run_id?: string | null
+          promoted_provider?: string | null
+          review_notes?: string | null
+          review_result?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          siteone_crawl_run_id: string
+          status?: string
+          summary?: Json
+          updated_at?: string
+          website_id: string
+          workspace_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          native_crawl_run_id?: string
+          project_id?: string
+          promoted_at?: string | null
+          promoted_by?: string | null
+          promoted_crawl_run_id?: string | null
+          promoted_provider?: string | null
+          review_notes?: string | null
+          review_result?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          siteone_crawl_run_id?: string
+          status?: string
+          summary?: Json
+          updated_at?: string
+          website_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crawl_comparison_groups_native_crawl_run_id_fkey"
+            columns: ["native_crawl_run_id"]
+            isOneToOne: true
+            referencedRelation: "crawl_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crawl_comparison_groups_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crawl_comparison_groups_promoted_crawl_run_id_fkey"
+            columns: ["promoted_crawl_run_id"]
+            isOneToOne: false
+            referencedRelation: "crawl_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crawl_comparison_groups_siteone_crawl_run_id_fkey"
+            columns: ["siteone_crawl_run_id"]
+            isOneToOne: true
+            referencedRelation: "crawl_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crawl_comparison_groups_website_id_fkey"
+            columns: ["website_id"]
+            isOneToOne: false
+            referencedRelation: "websites"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crawl_comparison_groups_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       crawl_issue_observations: {
         Row: {
           crawl_run_id: string
@@ -640,6 +752,21 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      crawler_lab_admins: {
+        Row: {
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       crawler_worker_credentials: {
         Row: {
@@ -1638,6 +1765,7 @@ export type Database = {
           last_analysed_at: string | null
           meta_description: string | null
           normalised_url: string
+          official_crawl_run_id: string | null
           project_id: string
           robots_txt_status: string
           sitemap_status: string
@@ -1658,6 +1786,7 @@ export type Database = {
           last_analysed_at?: string | null
           meta_description?: string | null
           normalised_url: string
+          official_crawl_run_id?: string | null
           project_id: string
           robots_txt_status?: string
           sitemap_status?: string
@@ -1678,6 +1807,7 @@ export type Database = {
           last_analysed_at?: string | null
           meta_description?: string | null
           normalised_url?: string
+          official_crawl_run_id?: string | null
           project_id?: string
           robots_txt_status?: string
           sitemap_status?: string
@@ -1686,6 +1816,13 @@ export type Database = {
           url?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "websites_official_crawl_run_id_fkey"
+            columns: ["official_crawl_run_id"]
+            isOneToOne: false
+            referencedRelation: "crawl_runs"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "websites_project_id_fkey"
             columns: ["project_id"]
@@ -1806,6 +1943,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_access_crawler_lab: {
+        Args: { target_project_id: string }
+        Returns: boolean
+      }
       can_access_project: {
         Args: { target_project_id: string }
         Returns: boolean
@@ -1847,8 +1988,20 @@ export type Database = {
         }
         Returns: boolean
       }
+      crawler_lab_comparison_status: {
+        Args: { native_status: string; siteone_status: string }
+        Returns: string
+      }
+      crawler_lab_worker_availability: {
+        Args: { stale_after_seconds?: number; target_project_id: string }
+        Returns: Json
+      }
       crawler_worker_credential_id: {
         Args: { required_capability: string; worker_token: string }
+        Returns: string
+      }
+      create_crawler_comparison: {
+        Args: { stale_after_seconds?: number; target_website_id: string }
         Returns: string
       }
       create_initial_project: {
@@ -1934,6 +2087,10 @@ export type Database = {
         Args: { target_workspace_id: string }
         Returns: boolean
       }
+      promote_crawl_run: {
+        Args: { target_group_id: string; target_run_id: string }
+        Returns: boolean
+      }
       register_siteone_worker: {
         Args: {
           claiming_worker_id: string
@@ -1948,9 +2105,21 @@ export type Database = {
         Returns: boolean
       }
       requeue_stale_crawl_jobs: { Args: never; Returns: number }
+      review_crawler_comparison: {
+        Args: { notes?: string; review: string; target_group_id: string }
+        Returns: boolean
+      }
       set_issue_ignored: {
         Args: { should_ignore: boolean; target_issue_id: string }
         Returns: boolean
+      }
+      start_crawler_lab_run: {
+        Args: {
+          selected_provider: string
+          stale_after_seconds?: number
+          target_website_id: string
+        }
+        Returns: string
       }
     }
     Enums: {

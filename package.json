@@ -8,8 +8,8 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "build": "next build && npm run build:worker",
+    "start": "node scripts/start-production.mjs",
     "start:production": "node scripts/start-production.mjs",
     "dev:worker": "tsx workers/crawl-worker.ts",
     "build:worker": "tsc -p tsconfig.worker.json",

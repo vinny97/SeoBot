@@ -21,6 +21,8 @@ export async function runWorker(
       worker_type: "crawler",
       status: "starting",
       last_heartbeat_at: new Date().toISOString(),
+      capabilities: ["native_crawler"],
+      runtime: "render",
     },
     { onConflict: "worker_id" },
   );
@@ -40,6 +42,8 @@ export async function runWorker(
             status: "idle",
             current_job_id: null,
             last_heartbeat_at: new Date().toISOString(),
+            capabilities: ["native_crawler"],
+            runtime: "render",
           },
           { onConflict: "worker_id" },
         );
@@ -107,6 +111,8 @@ export async function runWorker(
       status: "offline",
       current_job_id: null,
       last_heartbeat_at: new Date().toISOString(),
+      capabilities: ["native_crawler"],
+      runtime: "render",
     },
     { onConflict: "worker_id" },
   );
