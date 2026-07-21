@@ -3,20 +3,33 @@
 ## Composio dashboard setup
 
 1. Sign in to the Composio dashboard and select the production Searchhand project.
-2. Open **Auth Configs** and create or select the Composio-managed Shopify OAuth configuration.
+2. Open **Auth Configs** and create or select the custom Shopify OAuth configuration named **Searchhand Shopify OAuth**.
 3. Copy its auth-config ID into `COMPOSIO_SHOPIFY_AUTH_CONFIG_ID`.
 4. Copy the production project API key into the server-only `COMPOSIO_API_KEY` environment variable.
-5. Open **Project Settings → Auth Screen**.
-6. Upload the Searchhand logo and set the app title to **Searchhand**.
-7. Configure the allowed return URL:
+5. Configure the custom OAuth credentials with the Shopify app client ID and client secret, and request only these scopes:
+
+   ```text
+   write_files,read_content,write_content
+   ```
+
+6. In Shopify Dev, add both Composio redirect URLs:
+
+   ```text
+   https://backend.composio.dev/api/v3.1/toolkits/auth/callback
+   https://backend.composio.dev/api/v1/auth-apps/add
+   ```
+
+7. Open **Project Settings → Auth Screen** in Composio.
+8. Upload the Searchhand logo and set the app title to **Searchhand**.
+9. Configure the allowed return URL:
 
    ```text
    https://<searchhand-domain>/app/integrations/shopify/callback
    ```
 
-8. Set `APP_URL` to the same Searchhand origin, with no path.
+10. Set `APP_URL` to the same Searchhand origin, with no path.
 
-Composio-managed Shopify OAuth is acceptable for this MVP. Do not create a custom Shopify OAuth flow in Searchhand. A custom Shopify app can be considered later if Searchhand needs complete consent-screen branding or custom scopes.
+Searchhand uses Composio's hosted connection flow with a custom Shopify OAuth app. OAuth tokens stay in Composio; Searchhand stores only the connected-account reference and safe store metadata.
 
 ## Connect and verify
 

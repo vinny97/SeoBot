@@ -1,6 +1,8 @@
 import { Composio } from "@composio/core";
 
 const name = "Searchhand Shopify OAuth";
+const scopes = "write_files,read_content,write_content";
+const oauthRedirectUri = "https://backend.composio.dev/api/v1/auth-apps/add";
 const apiKey = process.env.COMPOSIO_API_KEY;
 const clientId = process.env.COMPOSIO_SHOPIFY_CLIENT_ID;
 const clientSecret = process.env.COMPOSIO_SHOPIFY_CLIENT_SECRET;
@@ -30,21 +32,35 @@ const match = existing.items.find(
   (item) => item.name === name && item.toolkit.slug === "shopify",
 );
 
-const authConfig = match || await composio.authConfigs.create("shopify", {
-  type: "use_custom_auth",
-  authScheme: "OAUTH2",
-  credentials: {
-    client_id: clientId,
-    client_secret: clientSecret,
-  },
-  name,
-});
+const credentials = {
+  client_id: clientId,
+  client_secret: clientSecret,
+  oauth_redirect_uri: oauthRedirectUri,
+  scopes,
+};
 
-if (!authConfig.id.startsWith("ac_")) {
+let authConfigId: string;
+if (match) {
+  authConfigId = match.id;
+  await composio.authConfigs.update(authConfigId, {
+    type: "custom",
+    credentials,
+  });
+} else {
+  const createdAuthConfig = await composio.authConfigs.create("shopify", {
+    type: "use_custom_auth",
+    authScheme: "OAUTH2",
+    credentials,
+    name,
+  });
+  authConfigId = createdAuthConfig.id;
+}
+
+if (!authConfigId.startsWith("ac_")) {
   throw new Error("Composio returned an unexpected auth-config ID.");
 }
 
-const verified = await composio.authConfigs.get(authConfig.id);
+const verified = await composio.authConfigs.get(authConfigId);
 if (
   verified.toolkit.slug !== "shopify" ||
   verified.isComposioManaged ||
@@ -59,5 +75,6 @@ console.log(JSON.stringify({
   toolkit: verified.toolkit.slug,
   managed: verified.isComposioManaged,
   authScheme: verified.authScheme,
+  scopes,
   created: !match,
 }));

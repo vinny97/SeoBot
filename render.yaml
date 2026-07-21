@@ -10,6 +10,12 @@ services:
         value: 24.14.1
       - key: NEXT_PUBLIC_APP_URL
         sync: false
+      - key: APP_URL
+        sync: false
+      - key: COMPOSIO_API_KEY
+        sync: false
+      - key: COMPOSIO_SHOPIFY_AUTH_CONFIG_ID
+        sync: false
       - key: NEXT_PUBLIC_SUPABASE_URL
         sync: false
       - key: NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
