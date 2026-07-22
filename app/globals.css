@@ -35,6 +35,24 @@
   --line: var(--border);
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --flight-bg: #0d100e;
+  --flight-surface: #171b18;
+  --flight-ink: #f3f1eb;
+  --flight-muted: #a2a69f;
+  --flight-border: #303530;
+  --flight-grid: rgba(255,255,255,.055);
+  --background: #0d100e;
+  --foreground: #f3f1eb;
+  --card: #171b18;
+  --muted: #a2a69f;
+  --border: #303530;
+  --surface: #171b18;
+  --ink: #f3f1eb;
+  --line: #303530;
+}
+
 * { box-sizing: border-box; }
 html { background: var(--background); }
 body { margin: 0; color: var(--ink); background: var(--background); font-family: Arial, Helvetica, sans-serif; -webkit-font-smoothing: antialiased; }
@@ -55,6 +73,12 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .searchhand-radar { background: repeating-radial-gradient(circle at center,rgba(255,255,255,.095) 0 1px,transparent 1px 54px),linear-gradient(90deg,transparent 49.8%,rgba(255,255,255,.11) 50%,transparent 50.2%),linear-gradient(0deg,transparent 49.8%,rgba(255,255,255,.11) 50%,transparent 50.2%),repeating-conic-gradient(from 0deg,rgba(255,255,255,.08) 0deg .35deg,transparent .35deg 15deg),radial-gradient(circle at center,#222723 0%,#151816 70%); box-shadow: inset 0 0 70px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.025); }
 .searchhand-radar-sweep { background: conic-gradient(from -14deg,transparent 0deg,transparent 310deg,rgba(98,204,126,.03) 326deg,rgba(108,222,137,.34) 357deg,transparent 360deg); animation: radar-sweep 6s linear infinite; transform-origin: 50% 50%; filter: drop-shadow(0 0 12px rgba(108,222,137,.24)); }
 .searchhand-signal-pulse { animation: beacon 2.4s ease-out infinite; }
+.searchhand-dock { border-color: rgba(0,0,0,.1); background: rgba(255,255,255,.92); box-shadow: 0 18px 50px rgba(28,26,22,.18),inset 0 1px 0 rgba(255,255,255,.9); }
+:root[data-theme="dark"] .searchhand-dock { border-color: rgba(255,255,255,.12); background: rgba(24,28,25,.92); box-shadow: 0 18px 55px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.07); }
+:root[data-theme="dark"] .bg-white { background-color: var(--flight-surface)!important; }
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] textarea,
+:root[data-theme="dark"] select { color: var(--flight-ink); background-color: var(--flight-surface); }
 .flight-route-dash { animation: route-dash 12s linear infinite; }
 .flight-beacon { animation: beacon 2.4s ease-out infinite; }
 .flight-glow { box-shadow: 0 0 0 1px rgba(117,99,255,.12),0 24px 80px rgba(39,33,94,.28),inset 0 1px 0 rgba(255,255,255,.06); }

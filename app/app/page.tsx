@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, CheckCircle2, FileText, Plane, Radar, Search, ShieldCheck, Sparkles, Target, Wrench } from "lucide-react";
+import { AlertTriangle, ArrowRight, CheckCircle2, FileText, Plane, Radar, Search, ShieldCheck, Sparkles, Target, Wrench } from "lucide-react";
 import { useDemo } from "@/components/demo-provider";
 import { createDemoDashboard } from "@/lib/mock/dashboard";
 
@@ -85,24 +85,22 @@ export default function DashboardPage() {
   const currentWork=snapshot?.jobs.length?snapshot.jobs:dashboard.currentWork;
   const opportunities=(snapshot?.opportunities.length?snapshot.opportunities:dashboard.opportunities) as Signal[];
   const completed=snapshot?.activities.length?snapshot.activities.filter(item=>item.status==="Completed"):dashboard.completed;
-  const current=currentWork[0];
+  const current=currentWork.find(item=>item.status==="In progress"||item.status==="Waiting")||currentWork[0];
   const crawl=snapshot?.currentCrawl;
   const pagesReviewed=crawl?.pagesSucceeded??(demoMode?34:0);
   const opportunityCount=snapshot?.opportunities.length??dashboard.opportunities.length;
   const issuesFixed=Math.min(completed.length,99);
   const progress="progress" in (current||{})?Number((current as {progress?:number}).progress||0):0;
   const activeAnalysis=analysisState==="starting"||analysisState==="running"||(crawl&&["queued","running"].includes(crawl.status));
-  const website=dashboard.website;
   const recent=completed.slice(0,3);
   const attention=snapshot?.approvals.length||0;
+  const crawlCouldNotReadSite=Boolean(crawl&&!["queued","running"].includes(crawl.status)&&crawl.pagesSucceeded===0&&crawl.pagesFailed>0);
+  const crawlFailureCopy=crawl?.lastFetchErrorCode==="rate_limited"||crawl?.lastHttpStatus===503
+    ? "The website returned repeated 503 responses. Make sure it is live and not suspended, then retry from Website."
+    : crawl?.lastFetchErrorMessage||"The crawler could not read any public pages. Check that the website is live, then retry from Website.";
 
   return <>
-    <section className="mb-7 sm:mb-8">
-      <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[.16em] text-[var(--flight-muted)]">Live SEO workspace · {website}</p>
-      <h1 className="max-w-4xl text-[clamp(2.7rem,6vw,5rem)] font-semibold leading-[.96] tracking-[-.065em]">Your SEO is being handled.</h1>
-      <p className="mt-4 max-w-2xl text-[15px] leading-7 text-[var(--flight-muted)]">Searchhand is working on your website, finding the most useful improvements and helping it win more customers.</p>
-    </section>
-
+    <h1 className="sr-only">Searchhand SEO radar dashboard</h1>
     <section className="overflow-hidden rounded-[28px] border border-white/10 bg-[#171a18] shadow-[0_32px_80px_rgba(25,24,21,.18)] xl:grid xl:grid-cols-[minmax(0,1fr)_360px]">
       <SeoRadar signals={opportunities}/>
       <aside className="border-t border-white/10 bg-[#191c1a] text-white xl:border-l xl:border-t-0">
@@ -112,8 +110,8 @@ export default function DashboardPage() {
       </aside>
     </section>
 
-    <section className={`relative mt-4 overflow-hidden rounded-2xl border px-5 py-4 sm:px-6 ${analysisState==="error"?"border-red-200 bg-red-50":activeAnalysis?"border-[#c7d9cf] bg-[#edf6f0]":"border-black/10 bg-white/45"}`} role={analysisState==="error"?"alert":"status"}>
-      <div className="relative z-10 flex items-center gap-4"><span className={`grid h-12 w-12 shrink-0 place-items-center rounded-full ${analysisState==="error"?"bg-red-100 text-red-600":activeAnalysis?"bg-[#dcefe3] text-[#438f5d]":"bg-[#e4f2e7] text-[#438f5d]"}`}>{analysisState==="error"?<Search size={21}/>:activeAnalysis?<Radar size={21}/>:attention?<ShieldCheck size={21}/>:<CheckCircle2 size={21}/>}</span><div><h2 className="font-semibold">{analysisState==="error"?"Your workspace is ready, but analysis needs another try.":activeAnalysis?"Website analysis is running in the background.":attention?`${attention} item${attention===1?"":"s"} need your attention.`:"Nothing needs your attention right now."}</h2><p className="mt-1 text-xs leading-5 text-[var(--flight-muted)]">{analysisState==="error"?"Retry from Website without repeating onboarding.":activeAnalysis?`Keep using Searchhand while we work${crawl?` · ${crawl.pagesSucceeded} pages analysed`:""}.`:attention?"Open the relevant work item when you are ready to review it.":"We’ll keep working in the background and notify you when something is important."}</p></div></div>
+    <section className={`relative mt-4 overflow-hidden rounded-2xl border px-5 py-4 sm:px-6 ${crawlCouldNotReadSite||analysisState==="error"?"border-amber-300/60 bg-amber-50/80":activeAnalysis?"border-[#c7d9cf] bg-[#edf6f0]":"border-[var(--flight-border)] bg-[var(--flight-surface)]/55"}`} role={crawlCouldNotReadSite||analysisState==="error"?"alert":"status"}>
+      <div className="relative z-10 flex items-center gap-4"><span className={`grid h-12 w-12 shrink-0 place-items-center rounded-full ${crawlCouldNotReadSite||analysisState==="error"?"bg-amber-100 text-amber-700":activeAnalysis?"bg-[#dcefe3] text-[#438f5d]":"bg-[#e4f2e7] text-[#438f5d]"}`}>{crawlCouldNotReadSite?<AlertTriangle size={21}/>:analysisState==="error"?<Search size={21}/>:activeAnalysis?<Radar size={21}/>:attention?<ShieldCheck size={21}/>:<CheckCircle2 size={21}/>}</span><div><h2 className="font-semibold">{crawlCouldNotReadSite?"Website analysis couldn’t read the site.":analysisState==="error"?"Your workspace is ready, but analysis needs another try.":activeAnalysis?"Website analysis is running in the background.":attention?`${attention} item${attention===1?"":"s"} need your attention.`:"Nothing needs your attention right now."}</h2><p className="mt-1 text-xs leading-5 text-[var(--flight-muted)]">{crawlCouldNotReadSite?crawlFailureCopy:analysisState==="error"?"Retry from Website without repeating onboarding.":activeAnalysis?`Keep using Searchhand while we work${crawl?` · ${crawl.pagesSucceeded} pages analysed`:""}.`:attention?"Open the relevant work item when you are ready to review it.":"We’ll keep working in the background and notify you when something is important."}</p></div></div>
       <svg aria-hidden="true" viewBox="0 0 520 70" className="absolute -right-5 bottom-0 hidden h-[74px] w-[520px] opacity-35 md:block"><path d="M0 50 C90 45 120 30 180 35 S260 58 320 24 S390 48 520 16" fill="none" stroke="#9ba39d" strokeWidth="1" strokeDasharray="4 5"/><g transform="translate(462 8) rotate(-8)"><path d="M0 10 L28 2 L20 12 L29 17 L25 20 L15 16 L7 24 L3 23 L7 14 Z" fill="none" stroke="#4c514d" strokeWidth="1.5"/></g></svg>
     </section>
 

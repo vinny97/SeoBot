@@ -78,6 +78,12 @@ type Overview = {
   openErrors: number;
   openWarnings: number;
   currentCrawl: Run | null;
+  latestFailure: {
+    normalised_url: string;
+    http_status: number | null;
+    fetch_error_code: string | null;
+    fetch_error_message: string | null;
+  } | null;
   robots: {
     url: string;
     http_status: number | null;
@@ -234,6 +240,16 @@ export default function WebsitePage() {
   const active =
     overview.currentCrawl &&
     ["queued", "running"].includes(overview.currentCrawl.status);
+  const unreadable = Boolean(
+    overview.currentCrawl &&
+      finalStates.has(overview.currentCrawl.status) &&
+      overview.currentCrawl.pages_succeeded === 0 &&
+      overview.currentCrawl.pages_failed > 0,
+  );
+  const unavailable =
+    overview.robots?.http_status === 503 ||
+    overview.latestFailure?.http_status === 503 ||
+    overview.latestFailure?.fetch_error_code === "rate_limited";
   const metrics = [
     { label: "Pages", value: overview.pageCount, Icon: FileSearch },
     { label: "Open errors", value: overview.openErrors, Icon: XCircle },
@@ -293,6 +309,21 @@ export default function WebsitePage() {
       </div>
       {tab === "Overview" && (
         <div className="space-y-5">
+          {unreadable && (
+            <Card className="border-amber-300/70 bg-amber-50/80 p-5">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="mt-0.5 shrink-0 text-amber-700" size={20} />
+                <div>
+                  <p className="font-semibold">The analysis ran, but the website could not be read</p>
+                  <p className="mt-1 text-sm leading-6 text-[var(--muted)]">
+                    {unavailable
+                      ? "The website returned repeated HTTP 503 responses. Check that the site is live and its hosting service is not suspended, then run the analysis again."
+                      : overview.latestFailure?.fetch_error_message || "No public pages could be analysed. Check that the site is live and accessible, then run the analysis again."}
+                  </p>
+                </div>
+              </div>
+            </Card>
+          )}
           {active && (
             <Card className="border-[#c8d8e6] bg-[#edf4fa] p-5">
               <div className="flex items-center gap-3">
