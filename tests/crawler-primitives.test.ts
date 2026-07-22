@@ -1,6 +1,6 @@
 import { describe,expect,it } from "vitest";
 import { normaliseCrawlUrl,hasUnknownQueryParameters,isUnsafeActionUrl } from "../lib/crawler/url-normalisation.js";
-import { isBlockedAddress,validateHostname } from "../lib/crawler/dns-security.js";
+import { createPublicLookup,isBlockedAddress,validateHostname } from "../lib/crawler/dns-security.js";
 import { isWithinCrawlScope } from "../lib/crawler/url-scope.js";
 import { parseRobots } from "../lib/crawler/robots.js";
 import { parseSitemap } from "../lib/crawler/sitemaps.js";
@@ -27,6 +27,17 @@ describe("SSRF address classification",()=>{
   it("allows a public documentation address",()=>expect(isBlockedAddress("93.184.216.34")).toBe(false));
   it("blocks localhost hostnames",()=>expect(()=>validateHostname("service.localhost")).toThrow());
   it("blocks encoded loopback IP notation after URL parsing",()=>expect(()=>validateHostname(new URL("http://2130706433").hostname)).toThrow());
+  it("returns every validated address when the HTTP client requests all records",async()=>{
+    const records=[{address:"93.184.216.34",family:4 as const},{address:"2606:2800:220:1:248:1893:25c8:1946",family:6 as const}];
+    const lookup=createPublicLookup(async()=>records);
+    const result=await new Promise<unknown>((resolve,reject)=>(lookup as unknown as (hostname:string,options:{all:true},callback:(error:Error|null,addresses?:unknown)=>void)=>void)("example.com",{all:true},(error,addresses)=>error?reject(error):resolve(addresses)));
+    expect(result).toEqual(records);
+  });
+  it("returns one address for the standard lookup callback",async()=>{
+    const lookup=createPublicLookup(async()=>[{address:"93.184.216.34",family:4 as const}]);
+    const result=await new Promise<unknown>((resolve,reject)=>(lookup as unknown as (hostname:string,options:{all:false},callback:(error:Error|null,address?:string,family?:number)=>void)=>void)("example.com",{all:false},(error,address,family)=>error?reject(error):resolve({address,family})));
+    expect(result).toEqual({address:"93.184.216.34",family:4});
+  });
 });
 
 describe("robots and sitemap parsing",()=>{

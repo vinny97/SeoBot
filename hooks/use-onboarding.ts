@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { clearDemoWorkspace, loadDemoStatuses, loadOnboarding, saveDemoStatuses, saveOnboarding } from "@/lib/onboarding/storage";
-import { defaultOnboardingData, type OnboardingData } from "@/lib/onboarding/types";
+import { defaultOnboardingData, ONBOARDING_LAST_STEP, type OnboardingData } from "@/lib/onboarding/types";
 
 export function useOnboardingState(persistLocally = true) {
   const [data, setData] = useState<OnboardingData>(defaultOnboardingData);
@@ -13,7 +13,8 @@ export function useOnboardingState(persistLocally = true) {
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
-      const savedData = persistLocally ? loadOnboarding() : defaultOnboardingData;
+      const storedData = persistLocally ? loadOnboarding() : defaultOnboardingData;
+      const savedData = { ...storedData, currentStep: Math.min(ONBOARDING_LAST_STEP, storedData.currentStep) };
       const savedStatuses = persistLocally ? loadDemoStatuses() : {};
       dataRef.current = savedData;
       statusesRef.current = savedStatuses;
@@ -30,7 +31,7 @@ export function useOnboardingState(persistLocally = true) {
     setData(next);
   }, [persistLocally]);
   const goToStep = useCallback((currentStep: number) => {
-    const next = { ...dataRef.current, currentStep: Math.max(0, Math.min(7, currentStep)) };
+    const next = { ...dataRef.current, currentStep: Math.max(0, Math.min(ONBOARDING_LAST_STEP, currentStep)) };
     dataRef.current = next;
     if (persistLocally) saveOnboarding(next);
     setData(next);
@@ -42,9 +43,10 @@ export function useOnboardingState(persistLocally = true) {
     setStatuses(next);
   }, [persistLocally]);
   const replace = useCallback((next: OnboardingData) => {
-    dataRef.current = next;
-    if (persistLocally) saveOnboarding(next);
-    setData(next);
+    const bounded = { ...next, currentStep: Math.min(ONBOARDING_LAST_STEP, Math.max(0, next.currentStep)) };
+    dataRef.current = bounded;
+    if (persistLocally) saveOnboarding(bounded);
+    setData(bounded);
   }, [persistLocally]);
   const getCurrent = useCallback(() => dataRef.current, []);
   const reset = useCallback(() => { clearDemoWorkspace(); dataRef.current=defaultOnboardingData; statusesRef.current={}; setData(defaultOnboardingData); setStatuses({}); }, []);

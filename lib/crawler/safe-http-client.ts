@@ -1,9 +1,8 @@
 import { Agent, request } from "undici";
-import type { LookupFunction } from "node:net";
 import { CrawlError } from "./errors.js";
 import { normaliseCrawlUrl } from "./url-normalisation.js";
 import { isWithinCrawlScope } from "./url-scope.js";
-import { resolvePublicAddresses } from "./dns-security.js";
+import { createPublicLookup, resolvePublicAddresses } from "./dns-security.js";
 import type { FetchResult } from "./crawl-result.js";
 
 export type SafeHttpOptions = {
@@ -15,12 +14,7 @@ export type SafeHttpOptions = {
   accept: string;
 };
 function dispatcher() {
-  const safeLookup: LookupFunction = (hostname, _options, callback) => {
-    void resolvePublicAddresses(hostname)
-      .then((records) => callback(null, records[0].address, records[0].family))
-      .catch((error) => callback(error as Error, "", 4));
-  };
-  return new Agent({ connect: { lookup: safeLookup, timeout: 10_000 } });
+  return new Agent({ connect: { lookup: createPublicLookup(), timeout: 10_000 } });
 }
 export async function safeFetch(
   input: string,

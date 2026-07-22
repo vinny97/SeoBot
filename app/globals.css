@@ -52,6 +52,9 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .flight-grid-night { background-image: linear-gradient(rgba(143,158,194,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(143,158,194,.07) 1px,transparent 1px); background-size: 32px 32px; }
 .flight-radar { background: repeating-radial-gradient(circle at center,rgba(117,99,255,.16) 0 1px,transparent 1px 58px),linear-gradient(90deg,transparent 49.8%,rgba(117,99,255,.18) 50%,transparent 50.2%),linear-gradient(0deg,transparent 49.8%,rgba(117,99,255,.18) 50%,transparent 50.2%); }
 .flight-radar-sweep { animation: radar-sweep 5s linear infinite; transform-origin: 100% 100%; }
+.searchhand-radar { background: repeating-radial-gradient(circle at center,rgba(255,255,255,.095) 0 1px,transparent 1px 54px),linear-gradient(90deg,transparent 49.8%,rgba(255,255,255,.11) 50%,transparent 50.2%),linear-gradient(0deg,transparent 49.8%,rgba(255,255,255,.11) 50%,transparent 50.2%),repeating-conic-gradient(from 0deg,rgba(255,255,255,.08) 0deg .35deg,transparent .35deg 15deg),radial-gradient(circle at center,#222723 0%,#151816 70%); box-shadow: inset 0 0 70px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.025); }
+.searchhand-radar-sweep { background: conic-gradient(from -14deg,transparent 0deg,transparent 310deg,rgba(98,204,126,.03) 326deg,rgba(108,222,137,.34) 357deg,transparent 360deg); animation: radar-sweep 6s linear infinite; transform-origin: 50% 50%; filter: drop-shadow(0 0 12px rgba(108,222,137,.24)); }
+.searchhand-signal-pulse { animation: beacon 2.4s ease-out infinite; }
 .flight-route-dash { animation: route-dash 12s linear infinite; }
 .flight-beacon { animation: beacon 2.4s ease-out infinite; }
 .flight-glow { box-shadow: 0 0 0 1px rgba(117,99,255,.12),0 24px 80px rgba(39,33,94,.28),inset 0 1px 0 rgba(255,255,255,.06); }

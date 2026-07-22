@@ -302,7 +302,7 @@ export default function WebsitePage() {
                     Website analysis {overview.currentCrawl?.status}
                   </p>
                   <p className="text-sm text-[var(--muted)]">
-                    {overview.currentCrawl?.pages_fetched} pages analysed ·{" "}
+                    {overview.currentCrawl?.pages_succeeded} pages analysed ·{" "}
                     {overview.currentCrawl?.pages_discovered} discovered
                     {overview.currentCrawl?.current_url
                       ? ` · ${new URL(overview.currentCrawl.current_url).pathname}`

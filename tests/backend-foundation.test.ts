@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { safeRelativePath } from "../lib/auth/redirects";
 import { onboardingDraftSchema, onboardingPayloadSchema } from "../lib/validation/backend";
-import { defaultOnboardingData } from "../lib/onboarding/types";
+import { defaultOnboardingData, ONBOARDING_LAST_STEP } from "../lib/onboarding/types";
 
 describe("authentication redirects",()=>{
   it("keeps only intended relative application paths",()=>{
@@ -18,6 +18,19 @@ describe("onboarding validation",()=>{
   it("accepts an incomplete resumable draft",()=>expect(onboardingDraftSchema.safeParse(website).success).toBe(true));
   it("rejects an incomplete final payload",()=>expect(onboardingPayloadSchema.safeParse(website).success).toBe(false));
   it("accepts a completed normalized payload",()=>expect(onboardingPayloadSchema.safeParse({...website,businessDescription:"A clear description of this example company.",industry:"Consulting",services:["Advisory"],targetCustomer:"Small businesses",selectedGoals:["Get more qualified leads"],crawlAuthorised:true}).success).toBe(true));
+  it("uses the final visible onboarding step",()=>{
+    expect(onboardingPayloadSchema.safeParse({...website,businessDescription:"A clear description of this example company.",industry:"Consulting",services:["Advisory"],targetCustomer:"Small businesses",selectedGoals:["Get more qualified leads"],crawlAuthorised:true,currentStep:ONBOARDING_LAST_STEP}).success).toBe(true);
+    expect(onboardingDraftSchema.safeParse({...website,currentStep:ONBOARDING_LAST_STEP+1}).success).toBe(false);
+  });
+});
+
+describe("deferred onboarding analysis",()=>{
+  const onboardingRoute=readFileSync(new URL("../app/api/onboarding/route.ts",import.meta.url),"utf8");
+  const analysisRoute=readFileSync(new URL("../app/api/onboarding/analysis/route.ts",import.meta.url),"utf8");
+  const wizard=readFileSync(new URL("../components/onboarding-wizard.tsx",import.meta.url),"utf8");
+  it("does not enqueue a crawl while answers are being collected",()=>expect(onboardingRoute).not.toContain("enqueue_website_crawl"));
+  it("queues the crawl from a separate post-redirect endpoint",()=>{expect(analysisRoute).toContain("enqueue_website_crawl");expect(analysisRoute).toContain('requested_trigger: "onboarding"')});
+  it("opens the Flight Deck before requesting analysis",()=>{expect(wizard).toContain('/app?startAnalysis=1');expect(wizard).not.toContain("DiscoveryStep")});
 });
 
 describe("database security migration",()=>{

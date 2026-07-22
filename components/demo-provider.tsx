@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { useOnboardingState } from "@/hooks/use-onboarding";
 import { clearDemoWorkspace, loadOnboarding } from "@/lib/onboarding/storage";
-import { defaultOnboardingData, type OnboardingData } from "@/lib/onboarding/types";
+import { defaultOnboardingData, ONBOARDING_LAST_STEP, type OnboardingData } from "@/lib/onboarding/types";
 import type { ProjectSnapshot } from "@/lib/data/project-snapshot";
 
 type DemoContextValue = ReturnType<typeof useOnboardingState> & {
@@ -22,8 +22,8 @@ export function DemoProvider({ children, demoMode }: { children: ReactNode; demo
   useEffect(()=>{queueMicrotask(()=>void refresh())},[refresh]);
   async function request(path:string,method:string,body?:unknown){setSaving(true);setError(null);try{const response=await fetch(path,{method,headers:{"Content-Type":"application/json"},body:body===undefined?undefined:JSON.stringify(body)});const payload=await response.json().catch(()=>({}));if(!response.ok){setError(typeof payload.error==="string"?payload.error:"Your change could not be saved.");return false}if(payload?.project&&payload?.onboarding){setSnapshot(payload);state.replace(payload.onboarding)}else await refresh();return true}catch{setError("The server could not be reached. Your answers remain on screen.");return false}finally{setSaving(false)}}
   const saveProgress=async(nextStep:number)=>demoMode?(state.goToStep(nextStep),true):request("/api/onboarding",snapshot?"PUT":"POST",{data:{...state.getCurrent(),currentStep:nextStep},nextStep});
-  const completeOnboarding=async()=>demoMode?(state.update({completed:true,currentStep:7}),true):request("/api/onboarding","PATCH",{data:{...state.getCurrent(),completed:true,currentStep:7}});
-  const importLegacy=async()=>{if(!legacyData)return false;state.replace(legacyData);const ok=await request("/api/onboarding","POST",{data:legacyData,nextStep:legacyData.currentStep});if(ok){clearDemoWorkspace();setLegacyData(null)}return ok};
+  const completeOnboarding=async()=>demoMode?(state.update({completed:true,currentStep:ONBOARDING_LAST_STEP}),true):request("/api/onboarding","PATCH",{data:{...state.getCurrent(),completed:true,currentStep:ONBOARDING_LAST_STEP}});
+  const importLegacy=async()=>{if(!legacyData)return false;const bounded={...legacyData,currentStep:Math.min(ONBOARDING_LAST_STEP,legacyData.currentStep)};state.replace(bounded);const ok=await request("/api/onboarding","POST",{data:bounded,nextStep:bounded.currentStep});if(ok){clearDemoWorkspace();setLegacyData(null)}return ok};
   const dismissLegacy=()=>{setLegacyData(null);state.replace(defaultOnboardingData)};
   const mutateRecord=(path:string,method:string,body?:unknown)=>request(path,method,body);
   return <DemoContext.Provider value={{...state,demoMode,snapshot,loading,saving,error,legacyData,dismissLegacy,importLegacy,saveProgress,completeOnboarding,refresh,mutateRecord}}>{children}</DemoContext.Provider>;

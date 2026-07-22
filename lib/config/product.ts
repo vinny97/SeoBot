@@ -9,7 +9,6 @@ export const productConfig = {
   },
   onboardingSteps: [
     { id: "website", label: "Website" },
-    { id: "discovery", label: "Pre-flight" },
     { id: "business", label: "Business" },
     { id: "visibility", label: "Audience" },
     { id: "goals", label: "Destination" },

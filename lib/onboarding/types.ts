@@ -2,6 +2,8 @@ export type AudienceScope = "local" | "national" | "international";
 export type ApprovalPreference = "review_all" | "review_important" | "agreed_rules";
 export type BrandTone = "Professional" | "Friendly" | "Expert" | "Direct" | "Premium" | "Approachable";
 
+export const ONBOARDING_LAST_STEP = 6;
+
 export type CompetitorInput = {
   id: string;
   name: string;
