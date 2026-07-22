@@ -1,0 +1,11 @@
+"use client";
+import Link from "next/link";
+import { BarChart3,Eye,MousePointerClick,Percent,TrendingUp } from "lucide-react";
+import { Card,EmptyState,PageHeader } from "@/components/ui";
+import { useDemo } from "@/components/demo-provider";
+export default function ResultsPage(){
+  const{snapshot}=useDemo();const gsc=snapshot?.searchIntelligence.gsc;const metrics=snapshot?.searchIntelligence.metrics;
+  if(!gsc||gsc.status==="disconnected")return<><PageHeader eyebrow="Search data" title="Results" description="See measured Google search performance without a large analytics dashboard."/><EmptyState icon={<BarChart3 size={22}/>} title="Connect Google Search Console to see real search results" description="Searchhand will import search appearances, organic clicks, average position and click rate." action={<Link href="/app/integrations/google-search-console" className="inline-flex rounded-xl bg-[var(--flight-ink)] px-4 py-3 text-sm font-semibold text-white">Connect Search Console</Link>}/></>;
+  const values=[{label:"Search appearances",value:Math.round(metrics?.impressions||0).toLocaleString(),Icon:Eye},{label:"Organic clicks",value:Math.round(metrics?.clicks||0).toLocaleString(),Icon:MousePointerClick},{label:"Average position",value:metrics?metrics.position.toFixed(1):"—",Icon:TrendingUp},{label:"Click rate",value:metrics?`${(metrics.ctr*100).toFixed(1)}%`:"—",Icon:Percent}];
+  return<><PageHeader eyebrow="Search data" title="Results" description="The latest 28 days of imported Google Search Console data."/><div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{values.map(({label,value,Icon})=><Card key={label} className="p-5"><Icon size={20} className="text-[var(--flight-green)]"/><p className="mt-4 text-3xl font-semibold">{value}</p><p className="mt-1 text-sm text-[var(--flight-muted)]">{label}</p></Card>)}</div><Card className="mt-5 p-5"><h2 className="font-semibold">Measurement period</h2><p className="mt-2 text-sm leading-6 text-[var(--flight-muted)]">Last 28 days · last successful import {gsc.lastSuccessfulSyncAt?new Date(gsc.lastSuccessfulSyncAt).toLocaleString():"is still being prepared"}. Average position is an average across searches, locations and devices—not a permanent exact rank.</p></Card></>;
+}

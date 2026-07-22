@@ -4,6 +4,7 @@ import { claimJob, requeueStaleJobs } from "../lib/jobs/claim-job.js";
 import { completeJob, failJob } from "../lib/jobs/complete-job.js";
 import { crawlWebsite } from "../lib/crawler/crawler.js";
 import { CrawlError, safeErrorMessage } from "../lib/crawler/errors.js";
+import { claimIntelligenceJob,completeIntelligenceJob,executeIntelligenceJob,failIntelligenceJob } from "../lib/jobs/intelligence-job.js";
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 export async function runWorker(
   config: WorkerConfig,
@@ -21,20 +22,24 @@ export async function runWorker(
       worker_type: "crawler",
       status: "starting",
       last_heartbeat_at: new Date().toISOString(),
-      capabilities: ["native_crawler"],
+      capabilities: ["native_crawler","search_intelligence"],
       runtime: "render",
     },
     { onConflict: "worker_id" },
   );
+  let lastScheduleCheck=0;
   while (!signal.aborted) {
     try {
       await requeueStaleJobs(client);
+      if(Date.now()-lastScheduleCheck>60000){await client.rpc("enqueue_due_gsc_syncs");lastScheduleCheck=Date.now()}
       const job = await claimJob(
         client,
         workerId,
         config.CRAWLER_JOB_LOCK_MINUTES,
       );
       if (!job) {
+        const intelligenceJob=await claimIntelligenceJob(client,workerId,config.CRAWLER_JOB_LOCK_MINUTES);
+        if(intelligenceJob){try{const output=await executeIntelligenceJob(client,intelligenceJob,workerId,config.CRAWLER_JOB_LOCK_MINUTES);await completeIntelligenceJob(client,intelligenceJob.job_id,workerId,output)}catch(error){const status=typeof error==="object"&&error&&"status" in error?Number((error as {status?:unknown}).status):0;await failIntelligenceJob(client,intelligenceJob.job_id,workerId,safeErrorMessage(error),status===429||status>=500)}continue}
         await client.from("worker_heartbeats").upsert(
           {
             worker_id: workerId,
@@ -42,7 +47,7 @@ export async function runWorker(
             status: "idle",
             current_job_id: null,
             last_heartbeat_at: new Date().toISOString(),
-            capabilities: ["native_crawler"],
+            capabilities: ["native_crawler","search_intelligence"],
             runtime: "render",
           },
           { onConflict: "worker_id" },
@@ -111,7 +116,7 @@ export async function runWorker(
       status: "offline",
       current_job_id: null,
       last_heartbeat_at: new Date().toISOString(),
-      capabilities: ["native_crawler"],
+      capabilities: ["native_crawler","search_intelligence"],
       runtime: "render",
     },
     { onConflict: "worker_id" },

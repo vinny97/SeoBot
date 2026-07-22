@@ -65,6 +65,7 @@ type Issue = {
   first_seen_at: string;
   last_seen_at: string;
 };
+type Intelligence={id:string;website_page_id:string;page_type:string;primary_topic:string|null;search_intent:string;page_purpose_summary:string|null;content_quality_score:number|null;content_completeness_score:number|null;confidence:string;evidence:Record<string,unknown>;website_pages:{url:string;latest_title:string|null}|null};
 type Overview = {
   website: {
     id: string;
@@ -105,6 +106,7 @@ type Overview = {
 const tabs = [
   "Overview",
   "Pages",
+  "Page intelligence",
   "Issues",
   "Crawl history",
   "Sitemaps and robots",
@@ -122,6 +124,7 @@ export default function WebsitePage() {
   const [overview, setOverview] = useState<Overview | null>(null);
   const [pages, setPages] = useState<Page[]>([]);
   const [issues, setIssues] = useState<Issue[]>([]);
+  const [intelligence,setIntelligence]=useState<Intelligence[]>([]);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
@@ -172,6 +175,7 @@ export default function WebsitePage() {
       },
     );
   }, [tab, overview?.currentCrawl]);
+  useEffect(()=>{if(tab!=="Page intelligence")return;void fetch("/api/page-intelligence",{cache:"no-store"}).then(async response=>{if(response.ok)setIntelligence((await response.json()).items)})},[tab]);
   async function start() {
     if (!overview) return;
     setBusy(true);
@@ -395,6 +399,7 @@ export default function WebsitePage() {
           </Card>
         </div>
       )}
+      {tab==="Page intelligence"&&(intelligence.length?<div className="grid gap-4 lg:grid-cols-2">{intelligence.map(item=><Card key={item.id} className="p-5"><div className="flex flex-wrap gap-2"><Badge>{item.page_type.replaceAll("_"," ")}</Badge><Badge tone={item.confidence==="high"?"green":"amber"}>{item.confidence} confidence</Badge></div><h2 className="mt-3 font-semibold">{item.website_pages?.latest_title||item.website_pages?.url||"Page"}</h2><p className="mt-2 text-sm leading-6 text-[var(--muted)]">{item.page_purpose_summary}</p><dl className="mt-4 grid grid-cols-2 gap-3 text-sm"><div><dt className="text-xs text-[var(--muted)]">Main topic</dt><dd className="mt-1 font-medium">{item.primary_topic||"Not clear yet"}</dd></div><div><dt className="text-xs text-[var(--muted)]">Search purpose</dt><dd className="mt-1 font-medium">{item.search_intent}</dd></div><div><dt className="text-xs text-[var(--muted)]">Quality</dt><dd className="mt-1 font-medium">{item.content_quality_score??"—"}/100</dd></div><div><dt className="text-xs text-[var(--muted)]">Completeness</dt><dd className="mt-1 font-medium">{item.content_completeness_score??"—"}/100</dd></div></dl><details className="mt-4 rounded-xl bg-[var(--flight-bg)] p-3"><summary className="cursor-pointer text-sm font-semibold">Technical evidence</summary><pre className="mt-3 overflow-x-auto whitespace-pre-wrap text-xs">{JSON.stringify(item.evidence,null,2)}</pre></details></Card>)}</div>:<EmptyState title="No page purposes yet" description="Run a website check. Searchhand will classify each changed page after the crawl finishes."/>)}
       {tab === "Pages" && (
         <div>
           <Input

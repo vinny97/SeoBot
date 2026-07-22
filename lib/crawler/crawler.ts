@@ -429,6 +429,7 @@ export async function crawlWebsite(
   observations.forEach((page) => {
     page.incoming = incoming.get(page.url) || 0;
   });
+  await persistence.finaliseInternalLinks(incoming);
   const crossIssues = detectCrossPageIssues(
     job.website_id,
     observations,

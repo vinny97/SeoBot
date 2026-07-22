@@ -29,10 +29,10 @@ function RadarSignal({signal,index}:{signal:Signal;index:number}) {
   </div>;
 }
 
-function SeoRadar({signals}:{signals:Signal[]}) {
+function SeoRadar({signals,status}:{signals:Signal[];status:string}) {
   return <div className="relative min-h-[430px] overflow-hidden bg-[#171a18] sm:min-h-[520px]">
     <div className="absolute left-5 top-5 z-30 rounded-2xl border border-white/15 bg-black/20 px-4 py-3 backdrop-blur sm:left-6 sm:top-6">
-      <div className="flex items-center gap-2.5"><span className="relative grid h-7 w-7 place-items-center rounded-full border border-[#62bc7b]/50 bg-[#24462d]"><span className="searchhand-signal-pulse absolute inset-0 rounded-full border border-[#7ae29a]"/><span className="h-2.5 w-2.5 rounded-full bg-[#7ae29a] shadow-[0_0_12px_#7ae29a]"/></span><div><p className="text-sm font-semibold text-white">Agent working</p><p className="mt-0.5 text-[10px] text-white/45">Scanning. Analysing. Improving.</p></div></div>
+      <div className="flex items-center gap-2.5"><span className="relative grid h-7 w-7 place-items-center rounded-full border border-[#62bc7b]/50 bg-[#24462d]"><span className="searchhand-signal-pulse absolute inset-0 rounded-full border border-[#7ae29a]"/><span className="h-2.5 w-2.5 rounded-full bg-[#7ae29a] shadow-[0_0_12px_#7ae29a]"/></span><div><p className="text-sm font-semibold text-white">{status==="waiting_for_user"?"Recommendation ready":status==="idle"?"Agent monitoring":"Agent working"}</p><p className="mt-0.5 text-[10px] text-white/45">{status.replaceAll("_"," ")}</p></div></div>
     </div>
 
     <div className="absolute left-1/2 top-1/2 aspect-square w-[min(92%,610px)] -translate-x-1/2 -translate-y-1/2">
@@ -82,13 +82,13 @@ export default function DashboardPage() {
   },[analysisState,crawlStatus]);
 
   const dashboard=createDemoDashboard(data);
-  const currentWork=snapshot?.jobs.length?snapshot.jobs:dashboard.currentWork;
-  const opportunities=(snapshot?.opportunities.length?snapshot.opportunities:dashboard.opportunities) as Signal[];
-  const completed=snapshot?.activities.length?snapshot.activities.filter(item=>item.status==="Completed"):dashboard.completed;
+  const currentWork=demoMode?dashboard.currentWork:(snapshot?.jobs||[]);
+  const recommendations=snapshot?.searchIntelligence.recommendations||[];const best=recommendations.find(item=>item.isBest);const opportunities=(demoMode?dashboard.opportunities:best?[{id:best.id,title:best.title,why:best.reason,impact:`${best.confidence} confidence`}]:[]) as Signal[];
+  const completed=demoMode?dashboard.completed:(snapshot?.activities.filter(item=>item.status==="Completed")||[]);
   const current=currentWork.find(item=>item.status==="In progress"||item.status==="Waiting")||currentWork[0];
   const crawl=snapshot?.currentCrawl;
   const pagesReviewed=crawl?.pagesSucceeded??(demoMode?34:0);
-  const opportunityCount=snapshot?.opportunities.length??dashboard.opportunities.length;
+  const opportunityCount=demoMode?dashboard.opportunities.length:recommendations.filter(item=>item.type!=="ignore"&&!item.status.includes("superseded")).length;
   const issuesFixed=Math.min(completed.length,99);
   const progress="progress" in (current||{})?Number((current as {progress?:number}).progress||0):0;
   const activeAnalysis=analysisState==="starting"||analysisState==="running"||(crawl&&["queued","running"].includes(crawl.status));
@@ -102,13 +102,17 @@ export default function DashboardPage() {
   return <>
     <h1 className="sr-only">Searchhand SEO radar dashboard</h1>
     <section className="overflow-hidden rounded-[28px] border border-white/10 bg-[#171a18] shadow-[0_32px_80px_rgba(25,24,21,.18)] xl:grid xl:grid-cols-[minmax(0,1fr)_360px]">
-      <SeoRadar signals={opportunities}/>
+      <SeoRadar signals={opportunities} status={snapshot?.searchIntelligence.agentStatus||"idle"}/>
       <aside className="border-t border-white/10 bg-[#191c1a] text-white xl:border-l xl:border-t-0">
         <div className="border-b border-white/10 p-6"><p className="text-[10px] font-semibold uppercase tracking-[.08em] text-white/70">Overview</p><div className="mt-6 grid grid-cols-3 divide-x divide-white/10"><Metric icon={FileText} value={pagesReviewed} label="Pages reviewed"/><Metric icon={Target} value={opportunityCount} label="Opportunities found"/><Metric icon={Wrench} value={issuesFixed} label="Jobs completed"/></div></div>
         <div className="border-b border-white/10 p-6"><p className="text-[10px] font-semibold uppercase tracking-[.08em] text-white/70">Working now</p><div className="mt-5 flex gap-4"><span className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-[var(--flight-orange)] text-[var(--flight-orange)]"><Plane size={21} fill="currentColor"/></span><div className="min-w-0"><h2 className="text-[15px] font-semibold leading-5">{current?.title||"Choosing the most useful next improvement"}</h2><p className="mt-1 text-xs leading-5 text-white/45">{current?.description||"Comparing impact and effort"}</p><div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/8"><span className="block h-full rounded-full bg-[var(--flight-orange)] transition-[width] duration-700" style={{width:`${Math.max(8,progress)}%`}}/></div></div></div></div>
         <div className="p-6"><div className="flex items-center justify-between"><p className="text-[10px] font-semibold uppercase tracking-[.08em] text-white/70">Recent activity</p><Sparkles size={14} className="text-[#7cde91]"/></div><div className="mt-4 divide-y divide-white/10">{recent.map((item,index)=><div key={item.id} className="grid grid-cols-[42px_10px_1fr] items-center gap-2 py-3 text-xs"><span className="text-white/30">{index===0?"Now":`−${index*2+1}m`}</span><span className="h-2 w-2 rounded-full bg-[#79dd91] shadow-[0_0_8px_rgba(121,221,145,.55)]"/><span className="truncate text-white/72">{item.title}</span></div>)}</div><Link href="/app/activity" className="mt-4 inline-flex items-center gap-2 rounded-xl border border-white/15 px-3.5 py-2 text-[11px] font-medium text-white/65 transition hover:border-white/30 hover:text-white">View full activity <ArrowRight size={13}/></Link></div>
       </aside>
     </section>
+
+    {best&&<section className="mt-4 rounded-2xl border border-[#9bc9a8] bg-[#f0f8f2] p-5 sm:p-6"><div className="flex flex-col gap-5 sm:flex-row sm:items-start"><div className="min-w-0 flex-1"><p className="text-xs font-bold uppercase tracking-[.14em] text-[#438f5d]">Best next action</p><h2 className="mt-2 text-xl font-semibold">{best.title}</h2><p className="mt-2 text-sm leading-6 text-[var(--flight-muted)]">{best.reason}</p><p className="mt-3 text-sm"><strong>Recommended work:</strong> {best.recommendedAction}</p><p className="mt-3 text-xs font-semibold text-[#438f5d]">Confidence: {best.confidence}</p></div><Link href="/app/work" className="focus-ring inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--flight-ink)] px-4 text-sm font-semibold text-white">Review evidence <ArrowRight size={15} className="ml-2"/></Link></div></section>}
+
+    {!demoMode&&<section className="mt-4 grid gap-3 sm:grid-cols-4" aria-label="Search intelligence progress">{[["Website understood",snapshot?.searchIntelligence.pageIntelligenceCount?"Complete":activeAnalysis?"In progress":"Waiting"],["Search data imported",snapshot?.searchIntelligence.gsc?.lastSuccessfulSyncAt?"Complete":snapshot?.searchIntelligence.gsc?"In progress":"Waiting"],["Opportunities compared",recommendations.length?"Complete":snapshot?.searchIntelligence.gsc?"In progress":"Waiting"],["Recommendation ready",best?"Complete":"Waiting"]].map(([label,state])=><div key={label} className="rounded-xl border border-[var(--flight-border)] bg-[var(--flight-surface)] p-4"><p className="text-xs text-[var(--flight-muted)]">{label}</p><p className="mt-1 text-sm font-semibold">{state}</p></div>)}</section>}
 
     <section className={`relative mt-4 overflow-hidden rounded-2xl border px-5 py-4 sm:px-6 ${crawlCouldNotReadSite||analysisState==="error"?"border-amber-300/60 bg-amber-50/80":activeAnalysis?"border-[#c7d9cf] bg-[#edf6f0]":"border-[var(--flight-border)] bg-[var(--flight-surface)]/55"}`} role={crawlCouldNotReadSite||analysisState==="error"?"alert":"status"}>
       <div className="relative z-10 flex items-center gap-4"><span className={`grid h-12 w-12 shrink-0 place-items-center rounded-full ${crawlCouldNotReadSite||analysisState==="error"?"bg-amber-100 text-amber-700":activeAnalysis?"bg-[#dcefe3] text-[#438f5d]":"bg-[#e4f2e7] text-[#438f5d]"}`}>{crawlCouldNotReadSite?<AlertTriangle size={21}/>:analysisState==="error"?<Search size={21}/>:activeAnalysis?<Radar size={21}/>:attention?<ShieldCheck size={21}/>:<CheckCircle2 size={21}/>}</span><div><h2 className="font-semibold">{crawlCouldNotReadSite?"Website analysis couldn’t read the site.":analysisState==="error"?"Your workspace is ready, but analysis needs another try.":activeAnalysis?"Website analysis is running in the background.":attention?`${attention} item${attention===1?"":"s"} need your attention.`:"Nothing needs your attention right now."}</h2><p className="mt-1 text-xs leading-5 text-[var(--flight-muted)]">{crawlCouldNotReadSite?crawlFailureCopy:analysisState==="error"?"Retry from Website without repeating onboarding.":activeAnalysis?`Keep using Searchhand while we work${crawl?` · ${crawl.pagesSucceeded} pages analysed`:""}.`:attention?"Open the relevant work item when you are ready to review it.":"We’ll keep working in the background and notify you when something is important."}</p></div></div>

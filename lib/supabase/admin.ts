@@ -9,3 +9,5 @@ export function createPublishingAdminClient() {
     auth: { autoRefreshToken: false, persistSession: false },
   });
 }
+
+export function createAdminClient(){const env=requirePublishingDatabaseEnv();return createClient(env.NEXT_PUBLIC_SUPABASE_URL,env.SUPABASE_SECRET_KEY,{auth:{autoRefreshToken:false,persistSession:false}})}
