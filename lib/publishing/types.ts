@@ -8,10 +8,11 @@ export type PublishingConnectionStatus =
 
 export type SafePublishingConnection = {
   id: string;
-  provider: "shopify";
+  provider: "shopify" | "wix" | "wordpress";
   status: PublishingConnectionStatus;
   storeName: string | null;
   storeUrl: string | null;
+  accountName?: string | null;
   connectedAt: string | null;
   lastCheckedAt: string | null;
   lastUsedAt: string | null;
@@ -31,9 +32,12 @@ export type TestConnectionResult = {
 export type PublishArticleInput = {
   contentItemId?: string | null;
   idempotencyKey: string;
-  blogId: string;
+  blogId?: string;
+  authorMemberId?: string;
   title: string;
   bodyHtml: string;
+  excerpt?: string;
+  slug?: string;
   tags?: string;
 };
 
@@ -54,6 +58,7 @@ export type RemotePublicationStatus = {
 export interface PublishingProvider {
   testConnection(connectionId: string): Promise<TestConnectionResult>;
   createDraft(connectionId: string, input: PublishArticleInput): Promise<PublishResult>;
+  updateDraft?(connectionId: string, remoteId: string, input: PublishArticleInput): Promise<PublishResult>;
   getStatus(connectionId: string, remoteId: string): Promise<RemotePublicationStatus>;
   disconnect(connectionId: string): Promise<void>;
 }

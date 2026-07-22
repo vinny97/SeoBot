@@ -42,13 +42,14 @@ The SDK client pins the Shopify toolkit version and disables Composio telemetry 
 APP_URL=https://searchhand.example.com
 COMPOSIO_API_KEY=
 COMPOSIO_SHOPIFY_AUTH_CONFIG_ID=
+COMPOSIO_WIX_AUTH_CONFIG_ID=
 NEXT_PUBLIC_SUPABASE_URL=
 SUPABASE_SECRET_KEY=
 ```
 
 Do not use a `NEXT_PUBLIC_` prefix for Composio values or the Supabase server secret. `NEXT_PUBLIC_APP_URL` remains supported for the public app, but publishing callbacks prefer server-only `APP_URL`.
 
-Apply `supabase/migrations/202607210007_composio_shopify.sql` before enabling the UI.
+Apply `supabase/migrations/202607210007_composio_shopify.sql` and `supabase/migrations/202607220001_composio_wix.sql` before enabling the publishing UI.
 
 ## Connection flow
 

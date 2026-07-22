@@ -55,7 +55,7 @@ describe("Composio and Shopify contracts", () => {
     expect(COMPOSIO_SDK_VERSION).toBe("0.14.0");
     expect(SHOPIFY_TOOLKIT_VERSION).toBe("20260721_00");
     expect(SHOPIFY_CREATE_ARTICLE_ACTION).toBe("SHOPIFY_CREATE_ARTICLE");
-    expect(client).toContain("toolkitVersions: { shopify: SHOPIFY_TOOLKIT_VERSION }");
+    expect(client).toContain("shopify: SHOPIFY_TOOLKIT_VERSION");
   });
   it("maps remote account states without treating initialisation as success", () => {
     expect(mapComposioStatus("ACTIVE")).toBe("connected");

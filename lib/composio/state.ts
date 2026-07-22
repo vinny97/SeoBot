@@ -21,3 +21,10 @@ export function buildShopifyCallbackUrl(appUrl: string, connectionId: string, st
   url.searchParams.set("state", state);
   return url.toString();
 }
+
+export function buildWixCallbackUrl(appUrl: string, connectionId: string, state: string) {
+  const url = new URL("/app/integrations/wix/callback", appUrl);
+  url.searchParams.set("connection", connectionId);
+  url.searchParams.set("state", state);
+  return url.toString();
+}

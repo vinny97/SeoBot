@@ -1204,12 +1204,15 @@ export type Database = {
       publishing_connections: {
         Row: {
           callback_state_hash: string | null
-          composio_auth_config_id: string
+          composio_auth_config_id: string | null
           composio_connected_account_id: string | null
-          composio_user_id: string
+          composio_user_id: string | null
           connection_method: string
           created_at: string
+          credential_key_id: string | null
+          credential_version: number | null
           disconnected_at: string | null
+          encrypted_credentials: Json | null
           external_account_id: string | null
           external_account_name: string | null
           external_site_url: string | null
@@ -1232,12 +1235,15 @@ export type Database = {
         }
         Insert: {
           callback_state_hash?: string | null
-          composio_auth_config_id: string
+          composio_auth_config_id?: string | null
           composio_connected_account_id?: string | null
-          composio_user_id: string
+          composio_user_id?: string | null
           connection_method: string
           created_at?: string
+          credential_key_id?: string | null
+          credential_version?: number | null
           disconnected_at?: string | null
+          encrypted_credentials?: Json | null
           external_account_id?: string | null
           external_account_name?: string | null
           external_site_url?: string | null
@@ -1260,12 +1266,15 @@ export type Database = {
         }
         Update: {
           callback_state_hash?: string | null
-          composio_auth_config_id?: string
+          composio_auth_config_id?: string | null
           composio_connected_account_id?: string | null
-          composio_user_id?: string
+          composio_user_id?: string | null
           connection_method?: string
           created_at?: string
+          credential_key_id?: string | null
+          credential_version?: number | null
           disconnected_at?: string | null
+          encrypted_credentials?: Json | null
           external_account_id?: string | null
           external_account_name?: string | null
           external_site_url?: string | null

@@ -1,0 +1,33 @@
+import Link from "next/link";
+import { AlertTriangle, CheckCircle2, Clock3, ExternalLink, LockKeyhole, PanelsTopLeft } from "lucide-react";
+import { ConnectWixButton, WixConnectionActions } from "@/components/integrations/wix-actions";
+import { Badge, Card, EmptyState, PageHeader } from "@/components/ui";
+import { getWixPublishingServerEnv } from "@/lib/config/publishing-env";
+import { listWixPublishingConnections } from "@/lib/publishing/wix-connections";
+import type { SafePublishingConnection } from "@/lib/publishing/types";
+
+export const dynamic = "force-dynamic";
+
+const date = (value: string | null) => value ? new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" }).format(new Date(value)) : "Not yet";
+const tone = (status: string): "green" | "amber" | "red" | "neutral" => status === "connected" ? "green" : status === "pending" ? "amber" : status === "error" || status === "needs_reauthentication" ? "red" : "neutral";
+const label = (status: string) => ({ connected: "Connected", pending: "Connecting", needs_reauthentication: "Needs attention", error: "Needs attention", disconnected: "Disconnected", revoked: "Disconnected" }[status] || status);
+
+function ConnectionCard({ connection }: { connection: SafePublishingConnection }) {
+  const connected = connection.status === "connected";
+  return <Card className="p-5 sm:p-6"><div className="flex flex-wrap items-start justify-between gap-4"><div className="flex min-w-0 items-start gap-3"><span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#eef0ff] text-[#6657d9]"><PanelsTopLeft size={21}/></span><div className="min-w-0"><h2 className="font-semibold">{connection.storeName || "Wix site"}</h2>{connection.storeUrl ? <Link href={connection.storeUrl} target="_blank" rel="noreferrer" className="mt-1 inline-flex max-w-full items-center gap-1 break-all text-sm text-[var(--flight-blue)]">{connection.storeUrl}<ExternalLink size={12} className="shrink-0"/></Link> : <p className="mt-1 text-sm text-[var(--muted)]">Site details appear after verification.</p>}</div></div><Badge tone={tone(connection.status)}>{label(connection.status)}</Badge></div><dl className="mt-5 grid gap-3 text-sm sm:grid-cols-3"><div><dt className="text-xs text-[var(--muted)]">Connected</dt><dd className="mt-1 font-medium">{date(connection.connectedAt)}</dd></div><div><dt className="text-xs text-[var(--muted)]">Last checked</dt><dd className="mt-1 font-medium">{date(connection.lastCheckedAt)}</dd></div><div><dt className="text-xs text-[var(--muted)]">Last used</dt><dd className="mt-1 font-medium">{date(connection.lastUsedAt)}</dd></div></dl>{connection.errorMessage && <p role="alert" className="mt-4 flex gap-2 break-words rounded-xl bg-red-50 p-3 text-sm text-red-800"><AlertTriangle size={16} className="mt-0.5 shrink-0"/>{connection.errorMessage}</p>}{connection.testDraftStatus && <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-[#f2f1ec] p-3 text-sm"><span className="flex items-center gap-2"><CheckCircle2 size={16} className="text-[var(--flight-green)]"/>Connection test: {connection.testDraftStatus}</span>{(connection.testDraftAdminUrl || connection.testDraftUrl) && <Link href={connection.testDraftAdminUrl || connection.testDraftUrl || "#"} target="_blank" rel="noreferrer" className="font-semibold text-[var(--flight-blue)]">Open draft</Link>}</div>}<WixConnectionActions connectionId={connection.id} connected={connected}/></Card>;
+}
+
+export default async function WixIntegrationPage({ searchParams }: { searchParams: Promise<{ connected?: string; attention?: string; error?: string }> }) {
+  const params = await searchParams;
+  const configured = Boolean(getWixPublishingServerEnv());
+  let connections: SafePublishingConnection[] = [];
+  let loadError: string | null = null;
+  if (configured) {
+    try {
+      connections = await listWixPublishingConnections();
+    } catch {
+      loadError = "Wix connections could not be loaded. Check the server configuration and database migration.";
+    }
+  }
+  return <><PageHeader eyebrow="Publishing destination" title="Wix" description="Composio manages Wix authorization and credential refresh. Searchhand sends approved article drafts through Wix’s authenticated Blog API."/><div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--flight-border)] bg-[var(--flight-night)] p-5 text-white"><div className="flex min-w-0 gap-3"><LockKeyhole className="mt-0.5 shrink-0 text-[#65c99e]" size={20}/><div className="min-w-0 break-words"><p className="font-semibold">Credentials stay with Composio</p><p className="mt-1 text-sm text-white/55">Searchhand uses an authenticated proxy and never receives the Wix OAuth token.</p></div></div>{configured && <ConnectWixButton label={connections.length ? "Connect another Wix site" : "Connect Wix"}/>}</div>{params.connected && <p role="status" className="mb-5 rounded-xl bg-[#e7f3ed] p-4 text-sm text-[var(--flight-green)]">Wix connected and verified successfully.</p>}{params.attention && <p role="alert" className="mb-5 rounded-xl bg-amber-50 p-4 text-sm text-amber-800">Wix authorization did not become active. Refresh or reconnect the site.</p>}{params.error && <p role="alert" className="mb-5 rounded-xl bg-red-50 p-4 text-sm text-red-800">The Wix callback could not be verified. Start a fresh connection.</p>}{!configured ? <Card className="p-6"><div className="flex min-w-0 gap-3"><Clock3 className="mt-0.5 shrink-0 text-[var(--flight-amber)]"/><div className="min-w-0"><h2 className="font-semibold">Server configuration required</h2><p className="mt-2 max-w-2xl break-words text-sm leading-6 text-[var(--muted)]">Add APP_URL, COMPOSIO_API_KEY, COMPOSIO_WIX_AUTH_CONFIG_ID and SUPABASE_SECRET_KEY, then apply the Wix publishing migration.</p></div></div></Card> : loadError ? <p role="alert" className="rounded-xl bg-red-50 p-4 text-sm text-red-800">{loadError}</p> : connections.length ? <div className="space-y-4">{connections.map((connection) => <ConnectionCard key={connection.id} connection={connection}/>)}</div> : <EmptyState icon={<PanelsTopLeft size={22}/>} title="No Wix sites connected" description="Connect a Wix site through Composio. Searchhand verifies the exact app instance before creating an unpublished test draft." action={<ConnectWixButton/>}/>}</>;
+}
