@@ -19,6 +19,8 @@
     "start:siteone-worker": "node dist-siteone-worker/workers/siteone-pi-worker.js",
     "siteone:provision": "tsx scripts/provision-siteone-worker.ts",
     "siteone:enqueue": "tsx scripts/enqueue-siteone-crawl.ts",
+    "monid:inspect:semrush": "tsx scripts/inspect-monid-semrush.ts",
+    "monid:test:semrush": "tsx scripts/test-monid-semrush.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
