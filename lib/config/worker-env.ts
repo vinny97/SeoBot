@@ -8,6 +8,8 @@ const schema = z
     CRAWLER_CONTACT_URL: z.string().url(),
     CRAWLER_MAX_PAGES: z.coerce.number().int().min(1).max(50).default(50),
     CRAWLER_MAX_DEPTH: z.coerce.number().int().min(0).max(4).default(4),
+    CRAWLER_FULL_SITE_MAX_PAGES: z.coerce.number().int().min(50).max(50000).default(50000),
+    CRAWLER_FULL_SITE_MAX_DEPTH: z.coerce.number().int().min(4).max(20).default(20),
     CRAWLER_CONCURRENCY: z.coerce.number().int().min(1).max(2).default(2),
     CRAWLER_REQUEST_DELAY_MS: z.coerce
       .number()
@@ -47,6 +49,12 @@ const schema = z
       .min(30000)
       .max(3600000)
       .default(900000),
+    CRAWLER_FULL_SITE_MAX_DURATION_MS: z.coerce
+      .number()
+      .int()
+      .min(900000)
+      .max(21600000)
+      .default(21600000),
     CRAWLER_MANUAL_COOLDOWN_MINUTES: z.coerce.number().int().min(10).max(1440).default(10),
     CRAWLER_DAILY_LIMIT: z.coerce.number().int().min(1).max(3).default(3),
   })

@@ -47,3 +47,9 @@ describe("crawler queue migration",()=>{
   it("keeps worker RPCs service-role only",()=>expect(sql).toContain("to service_role"));
   it("enforces hard platform crawl limits",()=>{expect(sql).toContain("max_pages between 1 and 50");expect(sql).toContain("concurrency between 1 and 2");expect(sql).toContain("request_delay_ms between 250 and 10000")});
 });
+
+describe("full-site onboarding crawl migration",()=>{
+  const sql=readFileSync(new URL("../supabase/migrations/202607220003_full_site_onboarding_crawl.sql",import.meta.url),"utf8");
+  it("uses full-site settings for onboarding",()=>{expect(sql).toContain("full_site:=requested_trigger='onboarding'");expect(sql).toContain("case when full_site then 50000");expect(sql).toContain("case when full_site then 20")});
+  it("keeps routine crawls on the smaller limits",()=>{expect(sql).toContain("least(settings.max_pages,50)");expect(sql).toContain("least(settings.max_depth,4)")});
+});

@@ -35,8 +35,10 @@ export async function crawlWebsite(
 ) {
   const startUrl = normaliseCrawlUrl(job.url);
   const origin = new URL(startUrl).origin;
-  const maxPages = Math.min(job.max_pages, config.CRAWLER_MAX_PAGES, 50);
-  const maxDepth = Math.min(job.max_depth, config.CRAWLER_MAX_DEPTH, 4);
+  const fullSite = job.configuration.full_site === true;
+  const maxPages = Math.min(job.max_pages, fullSite ? config.CRAWLER_FULL_SITE_MAX_PAGES : config.CRAWLER_MAX_PAGES);
+  const maxDepth = Math.min(job.max_depth, fullSite ? config.CRAWLER_FULL_SITE_MAX_DEPTH : config.CRAWLER_MAX_DEPTH);
+  const maxDurationMs = fullSite ? config.CRAWLER_FULL_SITE_MAX_DURATION_MS : config.CRAWLER_MAX_DURATION_MS;
   const concurrency = Math.min(
     job.configuration.concurrency || config.CRAWLER_CONCURRENCY,
     2,
@@ -154,8 +156,9 @@ export async function crawlWebsite(
   ];
   const inspected = new Set<string>();
   const pendingSitemaps = sitemapCandidates.map((url) => ({ url, depth: 0 }));
+  const maxSitemaps = fullSite ? 1000 : 10;
   let validSitemap = false;
-  while (pendingSitemaps.length && inspected.size < 10) {
+  while (pendingSitemaps.length && inspected.size < maxSitemaps) {
     const candidate = pendingSitemaps.shift()!;
     let normalised: string;
     try {
@@ -208,7 +211,7 @@ export async function crawlWebsite(
           }
         } catch {}
       }
-      for (const nested of parsed.nested.slice(0, 20))
+      for (const nested of parsed.nested.slice(0, fullSite ? 1000 : 20))
         pendingSitemaps.push({ url: nested, depth: candidate.depth + 1 });
     } catch (error) {
       await persistence.saveSitemap({
@@ -245,7 +248,7 @@ export async function crawlWebsite(
         "Website analysis was cancelled.",
         "cancelled",
       );
-    if (Date.now() - crawlStarted > config.CRAWLER_MAX_DURATION_MS)
+    if (Date.now() - crawlStarted > maxDurationMs)
       throw new CrawlError(
         "crawl_timed_out",
         "Website analysis exceeded the configured time limit.",
