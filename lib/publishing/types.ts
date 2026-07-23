@@ -8,7 +8,7 @@ export type PublishingConnectionStatus =
 
 export type SafePublishingConnection = {
   id: string;
-  provider: "shopify" | "wix" | "wordpress";
+  provider: "shopify" | "wix" | "wordpress" | "nextjs";
   status: PublishingConnectionStatus;
   storeName: string | null;
   storeUrl: string | null;

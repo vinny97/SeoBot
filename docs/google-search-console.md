@@ -74,3 +74,27 @@ Disconnect first verifies the exact connected account, then deletes it through C
 - Device and country breakdowns are not shown in the first dashboard.
 - Composio must remain available for connection, property discovery and scheduled imports.
 - Search Console data normally lags behind the current date.
+# Google Search Console
+
+Searchhand connects directly to Google Search Console with the single read-only scope:
+
+`https://www.googleapis.com/auth/webmasters.readonly`
+
+The connection uses OAuth state validation, PKCE, offline access and an AES-256-GCM encrypted refresh token. Tokens are service-role-only and are never returned by browser routes, activity records or logs. Customers choose a verified property after authorization; Searchhand will not silently select an unrelated property.
+
+Existing Composio-backed connection records remain supported only as a migration path. New connections use direct Google OAuth.
+
+Search Console reporting is intentionally described as measured data, not a complete keyword database. Google may omit rows, so results screens and connection status must not imply that every query or page is represented.
+
+Required variables:
+
+```
+GOOGLE_GSC_CLIENT_ID=
+GOOGLE_GSC_CLIENT_SECRET=
+GOOGLE_GSC_REDIRECT_URI=
+GSC_TOKEN_ENCRYPTION_KEY=
+```
+
+Register the redirect URI exactly as:
+
+`https://YOUR_APP/app/integrations/google-search-console/callback`

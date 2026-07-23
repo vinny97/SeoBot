@@ -27,6 +27,7 @@ export type PublishingServerEnv = z.infer<typeof publishingEnvSchema>;
 export type WixPublishingServerEnv = z.infer<typeof wixPublishingEnvSchema>;
 export type PublishingDatabaseEnv = z.infer<typeof publishingDatabaseEnvSchema>;
 export type WordPressPublishingServerEnv = z.infer<typeof wordpressPublishingEnvSchema>;
+export type NextJsPublishingServerEnv = WordPressPublishingServerEnv;
 
 function publishingDatabaseValues() {
   return {
@@ -66,6 +67,8 @@ export function getWordPressPublishingServerEnv(): WordPressPublishingServerEnv 
   return result.success ? result.data : null;
 }
 
+export const getNextJsPublishingServerEnv = getWordPressPublishingServerEnv;
+
 export function requirePublishingDatabaseEnv(): PublishingDatabaseEnv {
   const result = publishingDatabaseEnvSchema.safeParse(publishingDatabaseValues());
   if (!result.success) throw new Error("Publishing storage is not configured. Add APP_URL and the Supabase server credentials.");
@@ -75,6 +78,12 @@ export function requirePublishingDatabaseEnv(): PublishingDatabaseEnv {
 export function requireWordPressPublishingServerEnv(): WordPressPublishingServerEnv {
   const env = getWordPressPublishingServerEnv();
   if (!env) throw new Error("WordPress publishing is not configured. Add APP_URL, INTEGRATION_ENCRYPTION_KEY and the Supabase server credentials.");
+  return env;
+}
+
+export function requireNextJsPublishingServerEnv(): NextJsPublishingServerEnv {
+  const env = getNextJsPublishingServerEnv();
+  if (!env) throw new Error("Next.js publishing is not configured. Add APP_URL, INTEGRATION_ENCRYPTION_KEY and the Supabase server credentials.");
   return env;
 }
 
