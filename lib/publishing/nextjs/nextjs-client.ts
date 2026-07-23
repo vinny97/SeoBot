@@ -1,7 +1,8 @@
 import "server-only";
 import { Agent, request } from "undici";
-import { createPublicLookup, resolvePublicAddresses } from "@/lib/crawler/dns-security";
+import type { LookupFunction } from "node:net";
 import { PublishingIntegrationError } from "@/lib/publishing/errors";
+import { resolveWordPressPublicAddresses } from "@/lib/publishing/wordpress/wordpress-network";
 
 export type NextJsConnectionInput = { siteUrl: string; apiToken: string };
 export type NextJsHealth = { siteName: string; siteUrl: string };
@@ -27,8 +28,15 @@ function integrationUrl(siteUrl: string, path: string) {
 
 async function adapterRequest(siteUrl: string, apiToken: string, path: string) {
   const url = integrationUrl(siteUrl, path);
-  await resolvePublicAddresses(url.hostname);
-  const dispatcher = new Agent({ connect: { lookup: createPublicLookup(), timeout: 10_000 } });
+  await resolveWordPressPublicAddresses(url.hostname);
+  const publicLookup: LookupFunction = (hostname, options, callback) => {
+    const complete = callback as unknown as (...args: unknown[]) => void;
+    void resolveWordPressPublicAddresses(hostname).then((records) => {
+      if (typeof options === "object" && options.all) complete(null, records);
+      else complete(null, records[0].address, records[0].family);
+    }).catch((error: unknown) => complete(error));
+  };
+  const dispatcher = new Agent({ connect: { lookup: publicLookup, timeout: 10_000 } });
   try {
     const response = await request(url, {
       dispatcher,

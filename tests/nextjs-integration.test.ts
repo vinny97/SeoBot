@@ -24,8 +24,8 @@ describe("Next.js integration", () => {
   it("requires authenticated health responses and public DNS resolution", () => {
     const client = readFileSync(new URL("../lib/publishing/nextjs/nextjs-client.ts", import.meta.url), "utf8");
     expect(client).toContain('authorization: `Bearer ${apiToken}`');
-    expect(client).toContain("resolvePublicAddresses(url.hostname)");
-    expect(client).toContain("createPublicLookup()");
+    expect(client).toContain("resolveWordPressPublicAddresses(url.hostname)");
+    expect(client).toContain("lookup: publicLookup");
     expect(client).toContain("capabilities?.drafts !== true");
   });
 });
