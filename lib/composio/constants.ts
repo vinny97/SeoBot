@@ -11,3 +11,6 @@ export const WIX_RICOS_CONVERT_ENDPOINT = "/ricos/v1/ricos-document/convert/to-r
 export const WIX_CREATE_DRAFT_ENDPOINT = "/blog/v3/draft-posts";
 export const WIX_LIST_DRAFTS_ENDPOINT = "/blog/v3/draft-posts";
 export const WIX_LIST_POSTS_ENDPOINT = "/v3/posts";
+export const GSC_TOOLKIT_VERSION = "20260721_00";
+export const GSC_LIST_SITES_ACTION = "GOOGLE_SEARCH_CONSOLE_LIST_SITES";
+export const GSC_SEARCH_ANALYTICS_ACTION = "GOOGLE_SEARCH_CONSOLE_SEARCH_ANALYTICS_QUERY";

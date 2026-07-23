@@ -18,7 +18,8 @@ import {
 const migration = readFileSync(new URL("../supabase/migrations/202607210007_composio_shopify.sql", import.meta.url), "utf8");
 const connections = readFileSync(new URL("../lib/publishing/connections.ts", import.meta.url), "utf8");
 const publisher = readFileSync(new URL("../lib/publishing/composio-shopify-publisher.ts", import.meta.url), "utf8");
-const client = readFileSync(new URL("../lib/composio/client.ts", import.meta.url), "utf8");
+const client = readFileSync(new URL("../lib/composio/client-core.ts", import.meta.url), "utf8");
+const clientWrapper = readFileSync(new URL("../lib/composio/client.ts", import.meta.url), "utf8");
 const testDraftRoute = readFileSync(new URL("../app/api/integrations/shopify/[connectionId]/test-draft/route.ts", import.meta.url), "utf8");
 
 describe("Composio tenant identity", () => {
@@ -107,7 +108,7 @@ describe("database isolation and secret boundaries", () => {
   it("has no provider-token columns and withholds tables from browser roles", () => {
     expect(migration).not.toMatch(/access_token|refresh_token|oauth_token/i);
     expect(migration).toContain("revoke all on public.publishing_connections,public.article_publications from anon,authenticated");
-    expect(client).toContain('import "server-only"');
+    expect(clientWrapper).toContain('import "server-only"');
     expect(client).not.toContain("NEXT_PUBLIC_COMPOSIO");
   });
   it("preserves history during disconnect and replaces only after callback success", () => {

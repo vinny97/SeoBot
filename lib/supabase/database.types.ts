@@ -567,6 +567,7 @@ export type Database = {
       }
       crawl_page_snapshots: {
         Row: {
+          author: string | null
           canonical_url: string | null
           content_hash: string | null
           content_type: string | null
@@ -580,11 +581,18 @@ export type Database = {
           h2_count: number | null
           http_status: number | null
           id: string
+          images: Json
+          incoming_internal_link_count: number
           indexability_reason: string | null
           indexable: boolean | null
+          internal_anchor_texts: string[]
           language: string | null
+          main_content: string | null
           meta_description: string | null
+          modified_at: string | null
           normalised_url: string
+          outgoing_internal_link_count: number
+          published_at: string | null
           redirect_count: number
           requested_url: string
           response_bytes: number | null
@@ -598,6 +606,7 @@ export type Database = {
           x_robots_tag: string[]
         }
         Insert: {
+          author?: string | null
           canonical_url?: string | null
           content_hash?: string | null
           content_type?: string | null
@@ -611,11 +620,18 @@ export type Database = {
           h2_count?: number | null
           http_status?: number | null
           id?: string
+          images?: Json
+          incoming_internal_link_count?: number
           indexability_reason?: string | null
           indexable?: boolean | null
+          internal_anchor_texts?: string[]
           language?: string | null
+          main_content?: string | null
           meta_description?: string | null
+          modified_at?: string | null
           normalised_url: string
+          outgoing_internal_link_count?: number
+          published_at?: string | null
           redirect_count?: number
           requested_url: string
           response_bytes?: number | null
@@ -629,6 +645,7 @@ export type Database = {
           x_robots_tag?: string[]
         }
         Update: {
+          author?: string | null
           canonical_url?: string | null
           content_hash?: string | null
           content_type?: string | null
@@ -642,11 +659,18 @@ export type Database = {
           h2_count?: number | null
           http_status?: number | null
           id?: string
+          images?: Json
+          incoming_internal_link_count?: number
           indexability_reason?: string | null
           indexable?: boolean | null
+          internal_anchor_texts?: string[]
           language?: string | null
+          main_content?: string | null
           meta_description?: string | null
+          modified_at?: string | null
           normalised_url?: string
+          outgoing_internal_link_count?: number
+          published_at?: string | null
           redirect_count?: number
           requested_url?: string
           response_bytes?: number | null
@@ -881,6 +905,506 @@ export type Database = {
           token_hash?: string
         }
         Relationships: []
+      }
+      gsc_connections: {
+        Row: {
+          composio_auth_config_id: string | null
+          composio_connected_account_id: string | null
+          composio_user_id: string | null
+          connection_method: string
+          created_at: string
+          credential_version: number
+          disconnected_at: string | null
+          encrypted_refresh_token: Json | null
+          google_account_email: string | null
+          granted_scopes: string[]
+          id: string
+          last_connected_at: string | null
+          last_error_code: string | null
+          last_error_message: string | null
+          last_successful_sync_at: string | null
+          last_synced_at: string | null
+          permission_level: string | null
+          project_id: string
+          property_type: string | null
+          property_url: string | null
+          status: string
+          sync_cursor: Json
+          updated_at: string
+          user_id: string
+          website_id: string
+          workspace_id: string
+        }
+        Insert: {
+          composio_auth_config_id?: string | null
+          composio_connected_account_id?: string | null
+          composio_user_id?: string | null
+          connection_method?: string
+          created_at?: string
+          credential_version?: number
+          disconnected_at?: string | null
+          encrypted_refresh_token?: Json | null
+          google_account_email?: string | null
+          granted_scopes?: string[]
+          id?: string
+          last_connected_at?: string | null
+          last_error_code?: string | null
+          last_error_message?: string | null
+          last_successful_sync_at?: string | null
+          last_synced_at?: string | null
+          permission_level?: string | null
+          project_id: string
+          property_type?: string | null
+          property_url?: string | null
+          status?: string
+          sync_cursor?: Json
+          updated_at?: string
+          user_id: string
+          website_id: string
+          workspace_id: string
+        }
+        Update: {
+          composio_auth_config_id?: string | null
+          composio_connected_account_id?: string | null
+          composio_user_id?: string | null
+          connection_method?: string
+          created_at?: string
+          credential_version?: number
+          disconnected_at?: string | null
+          encrypted_refresh_token?: Json | null
+          google_account_email?: string | null
+          granted_scopes?: string[]
+          id?: string
+          last_connected_at?: string | null
+          last_error_code?: string | null
+          last_error_message?: string | null
+          last_successful_sync_at?: string | null
+          last_synced_at?: string | null
+          permission_level?: string | null
+          project_id?: string
+          property_type?: string | null
+          property_url?: string | null
+          status?: string
+          sync_cursor?: Json
+          updated_at?: string
+          user_id?: string
+          website_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gsc_connections_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gsc_connections_website_id_fkey"
+            columns: ["website_id"]
+            isOneToOne: true
+            referencedRelation: "websites"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gsc_connections_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gsc_daily_metrics: {
+        Row: {
+          clicks: number
+          connection_id: string
+          created_at: string
+          ctr: number
+          date: string
+          id: string
+          impressions: number
+          position: number
+          search_type: string
+          updated_at: string
+        }
+        Insert: {
+          clicks?: number
+          connection_id: string
+          created_at?: string
+          ctr?: number
+          date: string
+          id?: string
+          impressions?: number
+          position?: number
+          search_type?: string
+          updated_at?: string
+        }
+        Update: {
+          clicks?: number
+          connection_id?: string
+          created_at?: string
+          ctr?: number
+          date?: string
+          id?: string
+          impressions?: number
+          position?: number
+          search_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gsc_daily_metrics_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "gsc_connections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gsc_oauth_sessions: {
+        Row: {
+          available_properties: Json
+          code_verifier: string
+          composio_auth_config_id: string | null
+          composio_connected_account_id: string | null
+          composio_user_id: string | null
+          connection_id: string | null
+          consumed_at: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          previous_connected_account_id: string | null
+          project_id: string
+          state_hash: string
+          user_id: string
+          website_id: string
+          workspace_id: string
+        }
+        Insert: {
+          available_properties?: Json
+          code_verifier: string
+          composio_auth_config_id?: string | null
+          composio_connected_account_id?: string | null
+          composio_user_id?: string | null
+          connection_id?: string | null
+          consumed_at?: string | null
+          created_at?: string
+          expires_at: string
+          id?: string
+          previous_connected_account_id?: string | null
+          project_id: string
+          state_hash: string
+          user_id: string
+          website_id: string
+          workspace_id: string
+        }
+        Update: {
+          available_properties?: Json
+          code_verifier?: string
+          composio_auth_config_id?: string | null
+          composio_connected_account_id?: string | null
+          composio_user_id?: string | null
+          connection_id?: string | null
+          consumed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          previous_connected_account_id?: string | null
+          project_id?: string
+          state_hash?: string
+          user_id?: string
+          website_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gsc_oauth_sessions_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "gsc_connections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gsc_oauth_sessions_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gsc_oauth_sessions_website_id_fkey"
+            columns: ["website_id"]
+            isOneToOne: false
+            referencedRelation: "websites"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gsc_oauth_sessions_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gsc_page_metrics: {
+        Row: {
+          clicks: number
+          connection_id: string
+          created_at: string
+          ctr: number
+          date: string
+          id: string
+          impressions: number
+          normalised_page_url: string
+          page_url: string
+          position: number
+          updated_at: string
+          website_page_id: string | null
+        }
+        Insert: {
+          clicks?: number
+          connection_id: string
+          created_at?: string
+          ctr?: number
+          date: string
+          id?: string
+          impressions?: number
+          normalised_page_url: string
+          page_url: string
+          position?: number
+          updated_at?: string
+          website_page_id?: string | null
+        }
+        Update: {
+          clicks?: number
+          connection_id?: string
+          created_at?: string
+          ctr?: number
+          date?: string
+          id?: string
+          impressions?: number
+          normalised_page_url?: string
+          page_url?: string
+          position?: number
+          updated_at?: string
+          website_page_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gsc_page_metrics_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "gsc_connections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gsc_page_metrics_website_page_id_fkey"
+            columns: ["website_page_id"]
+            isOneToOne: false
+            referencedRelation: "website_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gsc_query_metrics: {
+        Row: {
+          clicks: number
+          connection_id: string
+          country: string
+          created_at: string
+          ctr: number
+          date: string
+          device: string
+          id: string
+          impressions: number
+          position: number
+          query: string
+          updated_at: string
+        }
+        Insert: {
+          clicks?: number
+          connection_id: string
+          country?: string
+          created_at?: string
+          ctr?: number
+          date: string
+          device?: string
+          id?: string
+          impressions?: number
+          position?: number
+          query: string
+          updated_at?: string
+        }
+        Update: {
+          clicks?: number
+          connection_id?: string
+          country?: string
+          created_at?: string
+          ctr?: number
+          date?: string
+          device?: string
+          id?: string
+          impressions?: number
+          position?: number
+          query?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gsc_query_metrics_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "gsc_connections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gsc_query_page_metrics: {
+        Row: {
+          clicks: number
+          connection_id: string
+          created_at: string
+          ctr: number
+          date: string
+          id: string
+          impressions: number
+          normalised_page_url: string
+          page_url: string
+          position: number
+          query: string
+          updated_at: string
+          website_page_id: string | null
+        }
+        Insert: {
+          clicks?: number
+          connection_id: string
+          created_at?: string
+          ctr?: number
+          date: string
+          id?: string
+          impressions?: number
+          normalised_page_url: string
+          page_url: string
+          position?: number
+          query: string
+          updated_at?: string
+          website_page_id?: string | null
+        }
+        Update: {
+          clicks?: number
+          connection_id?: string
+          created_at?: string
+          ctr?: number
+          date?: string
+          id?: string
+          impressions?: number
+          normalised_page_url?: string
+          page_url?: string
+          position?: number
+          query?: string
+          updated_at?: string
+          website_page_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gsc_query_page_metrics_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "gsc_connections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gsc_query_page_metrics_website_page_id_fkey"
+            columns: ["website_page_id"]
+            isOneToOne: false
+            referencedRelation: "website_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gsc_sync_runs: {
+        Row: {
+          completed_at: string | null
+          connection_id: string
+          created_at: string
+          cursor: Json
+          end_date: string
+          error_code: string | null
+          error_message: string | null
+          id: string
+          job_id: string | null
+          progress: number
+          project_id: string
+          rows_imported: number
+          start_date: string
+          started_at: string
+          status: string
+          sync_type: string
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          connection_id: string
+          created_at?: string
+          cursor?: Json
+          end_date: string
+          error_code?: string | null
+          error_message?: string | null
+          id?: string
+          job_id?: string | null
+          progress?: number
+          project_id: string
+          rows_imported?: number
+          start_date: string
+          started_at?: string
+          status?: string
+          sync_type: string
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          connection_id?: string
+          created_at?: string
+          cursor?: Json
+          end_date?: string
+          error_code?: string | null
+          error_message?: string | null
+          id?: string
+          job_id?: string | null
+          progress?: number
+          project_id?: string
+          rows_imported?: number
+          start_date?: string
+          started_at?: string
+          status?: string
+          sync_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gsc_sync_runs_connection_id_fkey"
+            columns: ["connection_id"]
+            isOneToOne: false
+            referencedRelation: "gsc_connections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gsc_sync_runs_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "seo_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gsc_sync_runs_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       integrations: {
         Row: {
@@ -1127,6 +1651,139 @@ export type Database = {
           },
         ]
       }
+      page_intelligence: {
+        Row: {
+          analysis_error: string | null
+          analysis_status: string
+          analysis_version: string
+          audience_types: string[]
+          confidence: string
+          content_completeness_score: number | null
+          content_hash: string
+          content_quality_score: number | null
+          crawl_run_id: string | null
+          created_at: string
+          evidence: Json
+          funnel_stage: string
+          id: string
+          locations: string[]
+          page_purpose_summary: string | null
+          page_snapshot_id: string | null
+          page_type: string
+          primary_topic: string | null
+          products_services: string[]
+          project_id: string
+          recommended_target_query: string | null
+          search_intent: string
+          secondary_topics: string[]
+          updated_at: string
+          website_id: string
+          website_page_id: string
+          workspace_id: string
+        }
+        Insert: {
+          analysis_error?: string | null
+          analysis_status?: string
+          analysis_version: string
+          audience_types?: string[]
+          confidence?: string
+          content_completeness_score?: number | null
+          content_hash: string
+          content_quality_score?: number | null
+          crawl_run_id?: string | null
+          created_at?: string
+          evidence?: Json
+          funnel_stage?: string
+          id?: string
+          locations?: string[]
+          page_purpose_summary?: string | null
+          page_snapshot_id?: string | null
+          page_type?: string
+          primary_topic?: string | null
+          products_services?: string[]
+          project_id: string
+          recommended_target_query?: string | null
+          search_intent?: string
+          secondary_topics?: string[]
+          updated_at?: string
+          website_id: string
+          website_page_id: string
+          workspace_id: string
+        }
+        Update: {
+          analysis_error?: string | null
+          analysis_status?: string
+          analysis_version?: string
+          audience_types?: string[]
+          confidence?: string
+          content_completeness_score?: number | null
+          content_hash?: string
+          content_quality_score?: number | null
+          crawl_run_id?: string | null
+          created_at?: string
+          evidence?: Json
+          funnel_stage?: string
+          id?: string
+          locations?: string[]
+          page_purpose_summary?: string | null
+          page_snapshot_id?: string | null
+          page_type?: string
+          primary_topic?: string | null
+          products_services?: string[]
+          project_id?: string
+          recommended_target_query?: string | null
+          search_intent?: string
+          secondary_topics?: string[]
+          updated_at?: string
+          website_id?: string
+          website_page_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "page_intelligence_crawl_run_id_fkey"
+            columns: ["crawl_run_id"]
+            isOneToOne: false
+            referencedRelation: "crawl_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "page_intelligence_page_snapshot_id_fkey"
+            columns: ["page_snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "crawl_page_snapshots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "page_intelligence_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "page_intelligence_website_id_fkey"
+            columns: ["website_id"]
+            isOneToOne: false
+            referencedRelation: "websites"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "page_intelligence_website_page_id_fkey"
+            columns: ["website_page_id"]
+            isOneToOne: false
+            referencedRelation: "website_pages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "page_intelligence_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       page_links: {
         Row: {
           anchor_text: string | null
@@ -1197,124 +1854,6 @@ export type Database = {
             columns: ["target_page_id"]
             isOneToOne: false
             referencedRelation: "website_pages"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      publishing_connections: {
-        Row: {
-          callback_state_hash: string | null
-          composio_auth_config_id: string | null
-          composio_connected_account_id: string | null
-          composio_user_id: string | null
-          connection_method: string
-          created_at: string
-          credential_key_id: string | null
-          credential_version: number | null
-          disconnected_at: string | null
-          encrypted_credentials: Json | null
-          external_account_id: string | null
-          external_account_name: string | null
-          external_site_url: string | null
-          granted_scopes: string[]
-          id: string
-          is_default: boolean
-          last_checked_at: string | null
-          last_connected_at: string | null
-          last_error_code: string | null
-          last_error_message: string | null
-          last_used_at: string | null
-          metadata: Json
-          project_id: string
-          provider: string
-          status: string
-          updated_at: string
-          user_id: string
-          website_id: string | null
-          workspace_id: string
-        }
-        Insert: {
-          callback_state_hash?: string | null
-          composio_auth_config_id?: string | null
-          composio_connected_account_id?: string | null
-          composio_user_id?: string | null
-          connection_method: string
-          created_at?: string
-          credential_key_id?: string | null
-          credential_version?: number | null
-          disconnected_at?: string | null
-          encrypted_credentials?: Json | null
-          external_account_id?: string | null
-          external_account_name?: string | null
-          external_site_url?: string | null
-          granted_scopes?: string[]
-          id?: string
-          is_default?: boolean
-          last_checked_at?: string | null
-          last_connected_at?: string | null
-          last_error_code?: string | null
-          last_error_message?: string | null
-          last_used_at?: string | null
-          metadata?: Json
-          project_id: string
-          provider: string
-          status?: string
-          updated_at?: string
-          user_id: string
-          website_id?: string | null
-          workspace_id: string
-        }
-        Update: {
-          callback_state_hash?: string | null
-          composio_auth_config_id?: string | null
-          composio_connected_account_id?: string | null
-          composio_user_id?: string | null
-          connection_method?: string
-          created_at?: string
-          credential_key_id?: string | null
-          credential_version?: number | null
-          disconnected_at?: string | null
-          encrypted_credentials?: Json | null
-          external_account_id?: string | null
-          external_account_name?: string | null
-          external_site_url?: string | null
-          granted_scopes?: string[]
-          id?: string
-          is_default?: boolean
-          last_checked_at?: string | null
-          last_connected_at?: string | null
-          last_error_code?: string | null
-          last_error_message?: string | null
-          last_used_at?: string | null
-          metadata?: Json
-          project_id?: string
-          provider?: string
-          status?: string
-          updated_at?: string
-          user_id?: string
-          website_id?: string | null
-          workspace_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "publishing_connections_project_id_fkey"
-            columns: ["project_id"]
-            isOneToOne: false
-            referencedRelation: "projects"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "publishing_connections_website_id_fkey"
-            columns: ["website_id"]
-            isOneToOne: false
-            referencedRelation: "websites"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "publishing_connections_workspace_id_fkey"
-            columns: ["workspace_id"]
-            isOneToOne: false
-            referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
         ]
@@ -1459,6 +1998,124 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "projects_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      publishing_connections: {
+        Row: {
+          callback_state_hash: string | null
+          composio_auth_config_id: string | null
+          composio_connected_account_id: string | null
+          composio_user_id: string | null
+          connection_method: string
+          created_at: string
+          credential_key_id: string | null
+          credential_version: number | null
+          disconnected_at: string | null
+          encrypted_credentials: Json | null
+          external_account_id: string | null
+          external_account_name: string | null
+          external_site_url: string | null
+          granted_scopes: string[]
+          id: string
+          is_default: boolean
+          last_checked_at: string | null
+          last_connected_at: string | null
+          last_error_code: string | null
+          last_error_message: string | null
+          last_used_at: string | null
+          metadata: Json
+          project_id: string
+          provider: string
+          status: string
+          updated_at: string
+          user_id: string
+          website_id: string | null
+          workspace_id: string
+        }
+        Insert: {
+          callback_state_hash?: string | null
+          composio_auth_config_id?: string | null
+          composio_connected_account_id?: string | null
+          composio_user_id?: string | null
+          connection_method: string
+          created_at?: string
+          credential_key_id?: string | null
+          credential_version?: number | null
+          disconnected_at?: string | null
+          encrypted_credentials?: Json | null
+          external_account_id?: string | null
+          external_account_name?: string | null
+          external_site_url?: string | null
+          granted_scopes?: string[]
+          id?: string
+          is_default?: boolean
+          last_checked_at?: string | null
+          last_connected_at?: string | null
+          last_error_code?: string | null
+          last_error_message?: string | null
+          last_used_at?: string | null
+          metadata?: Json
+          project_id: string
+          provider: string
+          status?: string
+          updated_at?: string
+          user_id: string
+          website_id?: string | null
+          workspace_id: string
+        }
+        Update: {
+          callback_state_hash?: string | null
+          composio_auth_config_id?: string | null
+          composio_connected_account_id?: string | null
+          composio_user_id?: string | null
+          connection_method?: string
+          created_at?: string
+          credential_key_id?: string | null
+          credential_version?: number | null
+          disconnected_at?: string | null
+          encrypted_credentials?: Json | null
+          external_account_id?: string | null
+          external_account_name?: string | null
+          external_site_url?: string | null
+          granted_scopes?: string[]
+          id?: string
+          is_default?: boolean
+          last_checked_at?: string | null
+          last_connected_at?: string | null
+          last_error_code?: string | null
+          last_error_message?: string | null
+          last_used_at?: string | null
+          metadata?: Json
+          project_id?: string
+          provider?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+          website_id?: string | null
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "publishing_connections_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "publishing_connections_website_id_fkey"
+            columns: ["website_id"]
+            isOneToOne: false
+            referencedRelation: "websites"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "publishing_connections_workspace_id_fkey"
             columns: ["workspace_id"]
             isOneToOne: false
             referencedRelation: "workspaces"
@@ -1754,6 +2411,134 @@ export type Database = {
             columns: ["project_id"]
             isOneToOne: false
             referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      seo_recommendations: {
+        Row: {
+          completed_at: string | null
+          confidence: string
+          created_at: string
+          dismissed_at: string | null
+          estimated_effort: string
+          evidence: Json
+          expected_impact: string
+          fingerprint: string
+          id: string
+          is_best_next_action: boolean
+          plan_horizon: string | null
+          priority_score: number
+          project_id: string
+          reason: string
+          recommendation_type: string
+          recommended_action: string
+          related_page_ids: string[]
+          reviewed_at: string | null
+          risk_level: string
+          score_components: Json
+          source_versions: Json
+          status: string
+          summary: string
+          target_page_id: string | null
+          target_queries: string[]
+          target_url: string | null
+          title: string
+          updated_at: string
+          website_id: string
+          workspace_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          confidence: string
+          created_at?: string
+          dismissed_at?: string | null
+          estimated_effort: string
+          evidence?: Json
+          expected_impact: string
+          fingerprint: string
+          id?: string
+          is_best_next_action?: boolean
+          plan_horizon?: string | null
+          priority_score?: number
+          project_id: string
+          reason: string
+          recommendation_type: string
+          recommended_action: string
+          related_page_ids?: string[]
+          reviewed_at?: string | null
+          risk_level: string
+          score_components?: Json
+          source_versions?: Json
+          status?: string
+          summary: string
+          target_page_id?: string | null
+          target_queries?: string[]
+          target_url?: string | null
+          title: string
+          updated_at?: string
+          website_id: string
+          workspace_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          confidence?: string
+          created_at?: string
+          dismissed_at?: string | null
+          estimated_effort?: string
+          evidence?: Json
+          expected_impact?: string
+          fingerprint?: string
+          id?: string
+          is_best_next_action?: boolean
+          plan_horizon?: string | null
+          priority_score?: number
+          project_id?: string
+          reason?: string
+          recommendation_type?: string
+          recommended_action?: string
+          related_page_ids?: string[]
+          reviewed_at?: string | null
+          risk_level?: string
+          score_components?: Json
+          source_versions?: Json
+          status?: string
+          summary?: string
+          target_page_id?: string | null
+          target_queries?: string[]
+          target_url?: string | null
+          title?: string
+          updated_at?: string
+          website_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seo_recommendations_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "seo_recommendations_target_page_id_fkey"
+            columns: ["target_page_id"]
+            isOneToOne: false
+            referencedRelation: "website_pages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "seo_recommendations_website_id_fkey"
+            columns: ["website_id"]
+            isOneToOne: false
+            referencedRelation: "websites"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "seo_recommendations_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
             referencedColumns: ["id"]
           },
         ]
@@ -2154,6 +2939,10 @@ export type Database = {
         Args: { claiming_worker_id: string; lock_minutes?: number }
         Returns: Json
       }
+      claim_next_intelligence_job: {
+        Args: { claiming_worker_id: string; lock_minutes?: number }
+        Returns: Json
+      }
       claim_next_siteone_job: {
         Args: {
           claiming_worker_id: string
@@ -2167,6 +2956,14 @@ export type Database = {
           claiming_worker_id: string
           counters: Json
           final_status: string
+          target_job_id: string
+        }
+        Returns: boolean
+      }
+      complete_intelligence_job: {
+        Args: {
+          claiming_worker_id: string
+          output?: Json
           target_job_id: string
         }
         Returns: boolean
@@ -2220,6 +3017,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      enqueue_due_gsc_syncs: { Args: never; Returns: number }
       enqueue_internal_siteone_crawl: {
         Args: { target_website_id: string }
         Returns: string
@@ -2229,6 +3027,15 @@ export type Database = {
         Returns: string
       }
       fail_crawl_job: {
+        Args: {
+          claiming_worker_id: string
+          retryable: boolean
+          safe_error: string
+          target_job_id: string
+        }
+        Returns: string
+      }
+      fail_intelligence_job: {
         Args: {
           claiming_worker_id: string
           retryable: boolean
@@ -2253,6 +3060,16 @@ export type Database = {
           claiming_worker_id: string
           counters: Json
           lock_minutes?: number
+          target_job_id: string
+        }
+        Returns: boolean
+      }
+      heartbeat_intelligence_job: {
+        Args: {
+          claiming_worker_id: string
+          job_progress: number
+          lock_minutes?: number
+          output?: Json
           target_job_id: string
         }
         Returns: boolean
@@ -2310,6 +3127,10 @@ export type Database = {
       }
       set_issue_ignored: {
         Args: { should_ignore: boolean; target_issue_id: string }
+        Returns: boolean
+      }
+      set_recommendation_decision: {
+        Args: { decision: string; target_recommendation_id: string }
         Returns: boolean
       }
       start_crawler_lab_run: {

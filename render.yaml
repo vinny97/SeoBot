@@ -18,6 +18,8 @@ services:
         sync: false
       - key: COMPOSIO_WIX_AUTH_CONFIG_ID
         sync: false
+      - key: COMPOSIO_GSC_AUTH_CONFIG_ID
+        value: ac_2d-b3WRSIFhr
       - key: MONID_API_KEY
         sync: false
       - key: INTEGRATION_ENCRYPTION_KEY
