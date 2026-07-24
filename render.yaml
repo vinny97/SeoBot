@@ -20,6 +20,8 @@ services:
         sync: false
       - key: COMPOSIO_GSC_AUTH_CONFIG_ID
         value: ac_2d-b3WRSIFhr
+      - key: COMPOSIO_GOOGLE_ANALYTICS_AUTH_CONFIG_ID
+        sync: false
       - key: MONID_API_KEY
         sync: false
       - key: INTEGRATION_ENCRYPTION_KEY
@@ -32,6 +34,10 @@ services:
         sync: false
       - key: NEXT_PUBLIC_DEMO_MODE
         value: "false"
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-5.6
       - key: SUPABASE_SECRET_KEY
         sync: false
       - key: CRAWLER_USER_AGENT

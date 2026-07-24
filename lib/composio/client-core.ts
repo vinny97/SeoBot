@@ -1,6 +1,6 @@
 import { Composio } from "@composio/core";
 import { z } from "zod";
-import { GSC_TOOLKIT_VERSION, SHOPIFY_TOOLKIT_VERSION, WIX_TOOLKIT_VERSION } from "./constants";
+import { GOOGLE_ANALYTICS_TOOLKIT_VERSION, GSC_TOOLKIT_VERSION, SHOPIFY_TOOLKIT_VERSION, WIX_TOOLKIT_VERSION } from "./constants";
 
 let client: Composio | null = null;
 
@@ -15,6 +15,7 @@ export function getComposioClient(): Composio {
       shopify: SHOPIFY_TOOLKIT_VERSION,
       wix: WIX_TOOLKIT_VERSION,
       google_search_console: GSC_TOOLKIT_VERSION,
+      google_analytics: GOOGLE_ANALYTICS_TOOLKIT_VERSION,
     },
   });
   return client;

@@ -28,3 +28,9 @@ export function buildWixCallbackUrl(appUrl: string, connectionId: string, state:
   url.searchParams.set("state", state);
   return url.toString();
 }
+
+export function buildGoogleAnalyticsCallbackUrl(appUrl: string, state: string) {
+  const url = new URL("/app/integrations/google-analytics/callback", appUrl);
+  url.searchParams.set("state", state);
+  return url.toString();
+}

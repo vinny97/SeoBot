@@ -24,13 +24,13 @@ describe("onboarding validation",()=>{
   });
 });
 
-describe("deferred onboarding analysis",()=>{
+describe("onboarding analysis",()=>{
   const onboardingRoute=readFileSync(new URL("../app/api/onboarding/route.ts",import.meta.url),"utf8");
   const analysisRoute=readFileSync(new URL("../app/api/onboarding/analysis/route.ts",import.meta.url),"utf8");
   const wizard=readFileSync(new URL("../components/onboarding-wizard.tsx",import.meta.url),"utf8");
-  it("does not enqueue a crawl while answers are being collected",()=>expect(onboardingRoute).not.toContain("enqueue_website_crawl"));
+  it("queues a small initial crawl as soon as the website is saved",()=>{expect(onboardingRoute).toContain("enqueue_website_crawl");expect(onboardingRoute).toContain('requested_trigger:"manual"')});
   it("queues the crawl from a separate post-redirect endpoint",()=>{expect(analysisRoute).toContain("enqueue_website_crawl");expect(analysisRoute).toContain('requested_trigger: "onboarding"')});
-  it("opens the Flight Deck before requesting analysis",()=>{expect(wizard).toContain('/app?startAnalysis=1');expect(wizard).not.toContain("DiscoveryStep")});
+  it("shows real crawl progress during onboarding",()=>expect(wizard).toContain("DiscoveryStep"));
 });
 
 describe("database security migration",()=>{

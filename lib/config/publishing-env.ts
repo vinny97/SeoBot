@@ -17,6 +17,9 @@ const publishingEnvSchema = composioBaseEnvSchema.extend({
 const wixPublishingEnvSchema = composioBaseEnvSchema.extend({
   COMPOSIO_WIX_AUTH_CONFIG_ID: z.string().startsWith("ac_"),
 });
+const googleAnalyticsEnvSchema = composioBaseEnvSchema.extend({
+  COMPOSIO_GOOGLE_ANALYTICS_AUTH_CONFIG_ID: z.string().startsWith("ac_"),
+});
 
 const wordpressPublishingEnvSchema = publishingDatabaseEnvSchema.extend({
   INTEGRATION_ENCRYPTION_KEY: z.string().min(43),
@@ -25,6 +28,7 @@ const wordpressPublishingEnvSchema = publishingDatabaseEnvSchema.extend({
 
 export type PublishingServerEnv = z.infer<typeof publishingEnvSchema>;
 export type WixPublishingServerEnv = z.infer<typeof wixPublishingEnvSchema>;
+export type GoogleAnalyticsEnv = z.infer<typeof googleAnalyticsEnvSchema>;
 export type PublishingDatabaseEnv = z.infer<typeof publishingDatabaseEnvSchema>;
 export type WordPressPublishingServerEnv = z.infer<typeof wordpressPublishingEnvSchema>;
 export type NextJsPublishingServerEnv = WordPressPublishingServerEnv;
@@ -55,6 +59,10 @@ export function getWixPublishingServerEnv(): WixPublishingServerEnv | null {
     ...composioBaseValues(),
     COMPOSIO_WIX_AUTH_CONFIG_ID: process.env.COMPOSIO_WIX_AUTH_CONFIG_ID,
   });
+  return result.success ? result.data : null;
+}
+export function getGoogleAnalyticsEnv(): GoogleAnalyticsEnv | null {
+  const result = googleAnalyticsEnvSchema.safeParse({ ...composioBaseValues(), COMPOSIO_GOOGLE_ANALYTICS_AUTH_CONFIG_ID: process.env.COMPOSIO_GOOGLE_ANALYTICS_AUTH_CONFIG_ID });
   return result.success ? result.data : null;
 }
 

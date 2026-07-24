@@ -6,7 +6,7 @@ import { LoadingSkeleton } from "@/components/foundation";
 import { OnboardingShell } from "@/components/onboarding/onboarding-shell";
 import { WebsiteStep } from "@/components/onboarding/steps/website-step";
 import { BusinessStep } from "@/components/onboarding/steps/business-step";
-import { SearchVisibilityStep } from "@/components/onboarding/steps/search-visibility-step";
+import { DiscoveryStep } from "@/components/onboarding/steps/discovery-step";
 import { GoalsStep } from "@/components/onboarding/steps/goals-step";
 import { CompetitorsStep } from "@/components/onboarding/steps/competitors-step";
 import { PlanStep } from "@/components/onboarding/steps/plan-step";
@@ -23,8 +23,8 @@ export function OnboardingWizard({initialWebsite=""}:{initialWebsite?:string}) {
   if(legacyData)return <main className="grid min-h-screen place-items-center px-5"><Card className="max-w-xl p-7"><p className="text-sm font-semibold uppercase tracking-wider text-[var(--accent)]">Saved setup found</p><h1 className="mt-2 text-2xl font-semibold">Continue with the answers saved on this device?</h1><p className="mt-3 text-sm leading-6 text-[var(--muted)]">We found your earlier local demonstration setup for {legacyData.businessName||legacyData.websiteUrl}. Importing copies validated answers into your private account. Local data is removed only after the server confirms the save.</p>{error&&<p role="alert" className="mt-4 text-sm text-[var(--error)]">{error}</p>}<div className="mt-6 flex flex-wrap gap-3"><Button disabled={saving} onClick={async()=>{await importLegacy()}}>{saving?"Importing…":"Import saved setup"}</Button><Button variant="ghost" disabled={saving} onClick={dismissLegacy}>Start fresh</Button></div></Card></main>;
   const content=[
     <WebsiteStep key="website" data={data} initialWebsite={initialWebsite} update={update} next={()=>go(1)}/>,
-    <BusinessStep key="business" data={data} update={update} back={()=>go(0)} next={()=>go(2)}/>,
-    <SearchVisibilityStep key="visibility" data={data} back={()=>go(1)} next={()=>go(3)}/>,
+    <DiscoveryStep key="discovery" data={data} back={()=>go(0)} next={()=>go(2)}/>,
+    <BusinessStep key="business" data={data} update={update} back={()=>go(1)} next={()=>go(3)}/>,
     <GoalsStep key="goals" data={data} update={update} back={()=>go(2)} next={()=>go(4)}/>,
     <CompetitorsStep key="competitors" data={data} update={update} back={()=>go(3)} next={()=>go(5)}/>,
     <PlanStep key="plan" data={data} back={()=>go(4)} next={()=>go(6)}/>,

@@ -1,0 +1,3 @@
+import { NextResponse } from "next/server";
+import { completeGoogleAnalyticsConnection } from "@/lib/google-analytics/connections";
+export async function GET(request:Request){const state=new URL(request.url).searchParams.get("state");if(!state)return NextResponse.redirect(new URL("/app/integrations/google-analytics?error=invalid_callback",request.url));try{await completeGoogleAnalyticsConnection(state);return NextResponse.redirect(new URL("/app/integrations/google-analytics",request.url))}catch{return NextResponse.redirect(new URL("/app/integrations/google-analytics?error=connection_failed",request.url))}}

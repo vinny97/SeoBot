@@ -1,0 +1,5 @@
+import { NextRequest, NextResponse } from "next/server";
+import { disconnectGoogleAnalytics, readGoogleAnalyticsConnection, selectGoogleAnalyticsProperty } from "@/lib/google-analytics/connections";
+export async function GET(){try{return NextResponse.json(await readGoogleAnalyticsConnection())}catch{return NextResponse.json({error:"Authentication required."},{status:401})}}
+export async function POST(request:NextRequest){const body=await request.json().catch(()=>null);if(typeof body?.property!=="string")return NextResponse.json({error:"Choose a Google Analytics property."},{status:400});try{await selectGoogleAnalyticsProperty(body.property);return NextResponse.json({success:true})}catch{return NextResponse.json({error:"That Google Analytics property is unavailable."},{status:400})}}
+export async function DELETE(){try{await disconnectGoogleAnalytics();return NextResponse.json({success:true})}catch{return NextResponse.json({error:"Google Analytics could not be disconnected."},{status:502})}}

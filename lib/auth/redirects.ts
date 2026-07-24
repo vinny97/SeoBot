@@ -10,7 +10,7 @@ export function safeRelativePath(value: string | null | undefined, fallback = "/
 }
 
 export function requestOrigin(request: Request) {
-  const configured = process.env.NEXT_PUBLIC_APP_URL;
+  const configured = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL;
   if (configured) return configured.replace(/\/$/,"");
   const forwardedHost = request.headers.get("x-forwarded-host");
   const forwardedProto = request.headers.get("x-forwarded-proto");

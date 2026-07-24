@@ -9,7 +9,7 @@
    - `http://localhost:3000/auth/confirm`
    - `https://YOUR-RENDER-DOMAIN/auth/confirm`
 3. Keep email/password enabled. To enable Google, configure the Google provider in Supabase; the application already starts the OAuth PKCE flow.
-4. For email templates, point confirmation links to `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email` and recovery links to the same route with `type=recovery&next=/update-password`.
+4. The default Supabase confirmation template works with the application. If you customise it, point confirmation links to `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email` and recovery links to the same route with `type=recovery&next=/update-password`.
 
 ## 2. Apply the migration safely
 
